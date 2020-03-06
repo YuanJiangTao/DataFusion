@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace DataFusion.UserControls
+namespace DataFusion.Views
 {
     /// <summary>
     /// LeftMainContent.xaml 的交互逻辑

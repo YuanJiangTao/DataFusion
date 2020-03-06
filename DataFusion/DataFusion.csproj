@@ -92,7 +92,7 @@
     </ApplicationDefinition>
     <Compile Include="Data\MessageToken.cs" />
     <Compile Include="Services\DataService.cs" />
-    <Compile Include="UserControls\LeftMainContent.xaml.cs">
+    <Compile Include="Views\LeftMainContent.xaml.cs">
       <DependentUpon>LeftMainContent.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\MainItemMenu.cs" />
@@ -116,7 +116,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\LeftMainContent.xaml">
+    <Page Include="Views\LeftMainContent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
