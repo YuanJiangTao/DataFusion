@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace DataFusion.Views
 {
     /// <summary>
-    /// LeftMainContent.xaml 的交互逻辑
+    /// MainContentView.xaml 的交互逻辑
     /// </summary>
-    public partial class LeftMainContent
+    public partial class MainContentView
     {
-        public LeftMainContent()
+        public MainContentView()
         {
             InitializeComponent();
         }

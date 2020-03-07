@@ -13,6 +13,7 @@
 */
 
 using CommonServiceLocator;
+using DataFusion.Services;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 
@@ -24,6 +25,7 @@ namespace DataFusion.ViewModel
         public ViewModelLocator()
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            SimpleIoc.Default.Register<DataService>();
             SimpleIoc.Default.Register<MainViewModel>();
         }
 
