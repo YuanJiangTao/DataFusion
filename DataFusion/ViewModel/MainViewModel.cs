@@ -27,6 +27,7 @@ namespace DataFusion.ViewModel
                      MainContent = t.Screen;
                  }
              });
+            MenuInfoList = _dataService.GetMainItemMenuViewModels();
         }
 
 
@@ -39,10 +40,6 @@ namespace DataFusion.ViewModel
             get => _mainItemMenuViews;
             set => Set(ref _mainItemMenuViews, value);
         }
-
-
-
-
         private string _contentTitle;
         public string ContentTitle
         {
@@ -55,12 +52,6 @@ namespace DataFusion.ViewModel
         {
             get => _mainContent;
             set => Set(ref _mainContent, value);
-        }
-        private object _mainDataContext;
-        public object MainDataContext
-        {
-            get => _mainDataContext;
-            set => Set(ref _mainDataContext, value);
         }
     }
 }

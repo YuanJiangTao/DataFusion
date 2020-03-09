@@ -9,13 +9,9 @@ using GalaSoft.MvvmLight;
 
 namespace DataFusion.Model
 {
-    public class SubMenuItem:ViewModelBase
+    public class SubMenuItem : ObservableObject
     {
         public SubMenuItem()
-        {
-
-        }
-        public SubMenuItem(string name, FrameworkElement screen = null)
         {
 
         }

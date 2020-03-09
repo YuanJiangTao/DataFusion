@@ -12,16 +12,15 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using HandyControl.Controls;
 
-namespace DataFusion
+namespace DataFusion.UserControls
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// PluginStateDisplay.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow:HandyControl.Controls.BlurWindow
+    public partial class PluginStateDisplay : UserControl
     {
-        public MainWindow()
+        public PluginStateDisplay()
         {
             InitializeComponent();
         }

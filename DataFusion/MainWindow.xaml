@@ -8,14 +8,14 @@
         xmlns:hc="https://handyorg.github.io/handycontrol"
         mc:Ignorable="d"   Height="600" Width="1000"
         xmlns:controls="clr-namespace:HandyControl.Controls;assembly=HandyControl"
-        xmlns:views="clr-namespace:DataFusion.Views"
+        xmlns:views="clr-namespace:DataFusion.Views" WindowStartupLocation="CenterScreen"
         Style="{StaticResource WindowBlur}" 
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
         DataContext="{Binding Main,Source={StaticResource Locator}}">
     <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
+        <!--<i:EventTrigger EventName="Loaded">
             <cmd:EventToCommand Command="{Binding Load}"></cmd:EventToCommand>
-        </i:EventTrigger>
+        </i:EventTrigger>-->
     </i:Interaction.Triggers>
     <hc:Window.NonClientAreaContent>
         <views:NoUserContentView></views:NoUserContentView>
@@ -26,12 +26,12 @@
     <Border BorderThickness="0,1,0,1" BorderBrush="{DynamicResource BorderBrush}">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition />
+                <RowDefinition Height="*" />
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200" MinWidth="200" MaxWidth="400"/>
+                    <ColumnDefinition Width="250" MinWidth="250" MaxWidth="400"/>
                     <ColumnDefinition MinWidth="200"/>
                 </Grid.ColumnDefinitions>
                 <views:LeftMainContent Grid.Column="0"></views:LeftMainContent>

@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using MaterialDesignThemes.Wpf;
 using DataFusion.Data;
+using System.Windows.Controls.Primitives;
 
 namespace DataFusion.ViewModel
 {
@@ -35,11 +36,19 @@ namespace DataFusion.ViewModel
         private void SwitchDemo(SelectionChangedEventArgs e)
         {
             if (e.AddedItems.Count == 0) return;
-            if ((e.Source as ListView).SelectedItem is SubMenuItem source)
+            if ((e.Source as Selector).SelectedItem is SubMenuItem source)
             {
                 if (Equals(_currentSubItem, source)) return;
+                _currentSubItem = source;
                 Messenger.Default.Send<SubMenuItem>(source, MessageToken.LoadShowContent);
             }
+        }
+
+        private string _imageName;
+        public string ImageName
+        {
+            get => _imageName;
+            set=>Set(ref _imageName,value);
         }
 
         private string _header;

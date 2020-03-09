@@ -91,13 +91,17 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Data\MessageToken.cs" />
+    <Compile Include="Resources\Converter\HatchBrushConverter.cs" />
+    <Compile Include="Resources\Converter\String2BrushConverter.cs" />
+    <Compile Include="Resources\Converter\StringRepeatConverter.cs" />
     <Compile Include="Services\DataService.cs" />
+    <Compile Include="UserControls\PluginStateDisplay.xaml.cs">
+      <DependentUpon>PluginStateDisplay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\MainItemMenuViewModel.cs" />
     <Compile Include="Views\LeftMainContent.xaml.cs">
       <DependentUpon>LeftMainContent.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\MainItemMenu.cs" />
-    <Compile Include="ViewModel\LeftMenuViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="Model\SubMenuItem.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -119,11 +123,51 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Themes\Generic.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Resources\Themes\Basic\Basic.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Menu.xaml">
+    <Page Include="Resources\Themes\Basic\Brushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Themes\Basic\Colors\Colors.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Themes\Basic\Colors\ColorsDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Themes\Basic\Converters.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Themes\Basic\Fonts.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Themes\Basic\Geometries.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Themes\SkinDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Themes\SkinDefault.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Themes\Styles\Style.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Themes\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserControls\PluginStateDisplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -170,10 +214,12 @@
   <ItemGroup>
     <Folder Include="Converter\" />
     <Folder Include="CustomControls\" />
-    <Folder Include="Pages\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Img\SortAscending_grey_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Img\menu.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets" Condition="Exists('..\packages\MaterialDesignThemes.3.0.1\build\MaterialDesignThemes.targets')" />

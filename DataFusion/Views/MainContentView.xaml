@@ -18,7 +18,7 @@
             </DockPanel>
             <Frame  Margin="5"  Grid.Row="1" VerticalAlignment="Stretch" 
                     NavigationUIVisibility="Hidden" 
-                    HorizontalAlignment="Stretch" DataContext="{Binding MainDataContext}" Content="{Binding MainContent}">
+                    HorizontalAlignment="Stretch"  Content="{Binding MainContent}">
                 
             </Frame>
         </Grid>
