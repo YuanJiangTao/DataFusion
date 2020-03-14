@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:DataFusion" 
              StartupUri="MainWindow.xaml" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             d1p1:Ignorable="d" 
+             d1p1:Ignorable="d"  Startup="Application_Startup"
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:vm="clr-namespace:DataFusion.ViewModel"
              >
@@ -20,7 +20,7 @@
                 <ResourceDictionary>
                     <ResourceDictionary.MergedDictionaries>
                         <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
-                        <ResourceDictionary Source="Resources/Themes/Theme.xaml"/>
+                        <!--<ResourceDictionary Source="Resources/Themes/Theme.xaml"/>-->
                     </ResourceDictionary.MergedDictionaries>
                 </ResourceDictionary>
                 <ResourceDictionary>

@@ -14,7 +14,7 @@
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <DockPanel Grid.Row="0">
-                <TextBlock DockPanel.Dock="Top"  Style="{StaticResource TextBlockDefault}" HorizontalAlignment="Left" Foreground="White" Text="{Binding ContentTitle,StringFormat='当前位置:{0}'}"></TextBlock>
+                <TextBlock DockPanel.Dock="Top"  HorizontalAlignment="Left" Foreground="White" Text="{Binding ContentTitle,StringFormat='当前位置:{0}'}" /> <!--Style="{StaticResource TextBlockDefault}"-->
             </DockPanel>
             <Frame  Margin="5"  Grid.Row="1" VerticalAlignment="Stretch" 
                     NavigationUIVisibility="Hidden" 

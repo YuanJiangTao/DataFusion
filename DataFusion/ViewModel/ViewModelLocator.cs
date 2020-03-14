@@ -24,9 +24,10 @@ namespace DataFusion.ViewModel
     {
         public ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Register<DataService>();
+            SimpleIoc.Default.Register<MessageService>();
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<PluginEditViewModel>();
         }
 
         public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();

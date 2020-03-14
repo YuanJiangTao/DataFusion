@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFusion", "DataFusion\DataFusion.csproj", "{C9D6B942-24F6-4698-A9B1-4492EC77E380}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{42B5AF3C-7D3B-4307-8C61-A6EB5F7E3D7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFusion.Interfaces", "DataFusion.Interfaces\DataFusion.Interfaces.csproj", "{81496566-A57A-442B-B503-53AD6E497F62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonUtils", "CommonUtils\CommonUtils.csproj", "{01DA417F-2354-47BB-BBF8-6CC03981E1AD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataFusion.PluginHosting", "DataFusion.PluginHosting\DataFusion.PluginHosting.csproj", "{AC82FEBA-E8D2-4054-863C-2044764DF639}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,16 +19,17 @@ Global
 		{C9D6B942-24F6-4698-A9B1-4492EC77E380}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9D6B942-24F6-4698-A9B1-4492EC77E380}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9D6B942-24F6-4698-A9B1-4492EC77E380}.Release|Any CPU.Build.0 = Release|Any CPU
-		{01DA417F-2354-47BB-BBF8-6CC03981E1AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{01DA417F-2354-47BB-BBF8-6CC03981E1AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{01DA417F-2354-47BB-BBF8-6CC03981E1AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{01DA417F-2354-47BB-BBF8-6CC03981E1AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81496566-A57A-442B-B503-53AD6E497F62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81496566-A57A-442B-B503-53AD6E497F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81496566-A57A-442B-B503-53AD6E497F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81496566-A57A-442B-B503-53AD6E497F62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC82FEBA-E8D2-4054-863C-2044764DF639}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC82FEBA-E8D2-4054-863C-2044764DF639}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC82FEBA-E8D2-4054-863C-2044764DF639}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC82FEBA-E8D2-4054-863C-2044764DF639}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{01DA417F-2354-47BB-BBF8-6CC03981E1AD} = {42B5AF3C-7D3B-4307-8C61-A6EB5F7E3D7E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5D506782-BE70-43F6-A862-F21880B175E1}

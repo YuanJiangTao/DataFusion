@@ -8,12 +8,48 @@ using System.Collections.ObjectModel;
 using MaterialDesignThemes.Wpf;
 using DataFusion.Model;
 using DataFusion.UserControls;
+using DataFusion.Interfaces.Utils;
 
 namespace DataFusion.Services
 {
     public class DataService
     {
-        public ObservableCollection<MainItemMenuViewModel> GetMainItemMenuViewModels()
+
+
+
+
+        private RedisHelper _redis;
+
+        public DataService()
+        {
+            _redis = new RedisHelper(0);
+        }
+
+
+
+
+
+
+        public SystemConfigModel GetSystemConfigModel()
+        {
+            return null;
+        }
+
+        public ObservableCollection<MenuViewModel> GetMainItemMenuViewModels()
+        {
+            return new ObservableCollection<MenuViewModel>()
+            {
+                new MenuViewModel()
+                {
+                    Header="插件管理",
+                    ImageName=$"../Resources/Img/menu.png",
+                    Screen=new PluginStateDisplay(),
+                }
+
+            };
+        }
+
+        public ObservableCollection<MainItemMenuViewModel> GetExpanderMainItemMenuViewModels()
         {
             return new ObservableCollection<MainItemMenuViewModel>()
             {
@@ -39,7 +75,7 @@ namespace DataFusion.Services
 
             };
         }
-        
+
 
     }
 }
