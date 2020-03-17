@@ -18,7 +18,7 @@ namespace DataFusion.ViewModel
     {
         private DataService _dataService;
 
-        public MainViewModel(DataService dataService)
+        public MainViewModel(DataService dataService, PluginEntryController pluginEntryController)
         {
             _dataService = dataService;
             Messenger.Default.Register<MenuViewModel>(this, MessageToken.LoadShowContent, t =>

@@ -57,6 +57,10 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=3.0.1.920, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.3.0.1\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="StackExchange.Redis, Version=1.2.6.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
@@ -98,6 +102,9 @@
     </ApplicationDefinition>
     <Compile Include="Data\MessageToken.cs" />
     <Compile Include="LogD.cs" />
+    <Compile Include="Model\ClientRunInfo.cs" />
+    <Compile Include="Model\MineInfoModel.cs" />
+    <Compile Include="Model\MineProtocalConfigModel.cs" />
     <Compile Include="Model\SystemConfigModel.cs" />
     <Compile Include="Resources\Converter\HatchBrushConverter.cs" />
     <Compile Include="Resources\Converter\String2BrushConverter.cs" />
@@ -108,8 +115,10 @@
     <Compile Include="UserControls\PluginStateDisplay.xaml.cs">
       <DependentUpon>PluginStateDisplay.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Data\Constant.cs" />
     <Compile Include="ViewModel\MainItemMenuViewModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
+    <Compile Include="ViewModel\MineDisplayViewModel.cs" />
     <Compile Include="ViewModel\NoUserContentViewModel.cs" />
     <Compile Include="ViewModel\PluginEditViewModel.cs" />
     <Compile Include="ViewModel\PluginEntryController.cs" />

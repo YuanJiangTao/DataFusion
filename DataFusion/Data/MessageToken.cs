@@ -11,5 +11,14 @@ namespace DataFusion.Data
         /*-------------------- Messages --------------------*/
 
         public static readonly string LoadShowContent = nameof(LoadShowContent);
+
+
+
+
+
+
+        /*-------------------- RedisKey --------------------*/
+
+        public static readonly string AllClientInfo = nameof(AllClientInfo);
     }
 }

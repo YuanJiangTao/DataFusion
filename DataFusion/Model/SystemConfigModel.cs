@@ -25,9 +25,5 @@ namespace DataFusion.Model
             get => _redisPwd;
             set => Set(ref _redisPwd, value);
         }
-
-
-
-
     }
 }

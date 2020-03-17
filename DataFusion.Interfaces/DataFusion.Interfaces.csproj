@@ -65,6 +65,7 @@
     <Compile Include="IPluginHost.cs" />
     <Compile Include="LogDog.cs" />
     <Compile Include="LogDogCollar.cs" />
+    <Compile Include="PluginStartupInfo.cs" />
     <Compile Include="Utils\CultureInfoHelper.cs" />
     <Compile Include="Utils\MD5Util.cs" />
     <Compile Include="Utils\RedisConnectionHelp.cs" />

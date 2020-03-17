@@ -17,6 +17,8 @@ using DataFusion.Services;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 
+using Unity;
+
 
 namespace DataFusion.ViewModel
 {
@@ -24,13 +26,24 @@ namespace DataFusion.ViewModel
     {
         public ViewModelLocator()
         {
-            SimpleIoc.Default.Register<DataService>();
-            SimpleIoc.Default.Register<MessageService>();
-            SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<PluginEditViewModel>();
+            //SimpleIoc.Default.Register<DataService>();
+            //SimpleIoc.Default.Register<MessageService>();
+            //SimpleIoc.Default.Register<MainViewModel>();
+            //SimpleIoc.Default.Register<PluginEditViewModel>();
         }
 
-        public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+        public void IniContainer(IUnityContainer container)
+        {
+            container.RegisterType<PluginEntryController>();
+            container.RegisterType<DataService>();
+
+            container.RegisterType<MainViewModel>();
+
+            Main = container.Resolve<MainViewModel>();
+        }
+        public MainViewModel Main { get; private set; }
+
+        //public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
 
         public static void Cleanup()
         {

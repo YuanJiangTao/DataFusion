@@ -70,7 +70,7 @@ namespace DataFusion.Interfaces.Utils
         /// 获取本机的物理地址
         /// </summary>
         /// <returns></returns>
-        public static string getMacAddr_Local()
+        public static string GetMacAddr_Local()
         {
             string madAddr = null;
             try

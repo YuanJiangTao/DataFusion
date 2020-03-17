@@ -245,6 +245,119 @@ namespace DataFusion.Interfaces.Utils
 
         #endregion String
 
+        #region Set
+
+        #region 同步方法
+        /// <summary>
+        /// 判断Set中某个member是否存在
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <returns></returns>
+        public bool SetExists(string key, string dataKey)
+        {
+            key = AddSysCustomKey(key);
+            return Do(db => db.SetContains(key, dataKey));
+        }
+        /// <summary>
+        /// 添加元素至Set中
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool SetAdd<T>(string key, T value)
+        {
+            key = AddSysCustomKey(key);
+            return Do(db => db.SetAdd(key, ConvertJson<T>(value)));
+        }
+        /// <summary>
+        /// 获取Set集合中所有Members
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public List<T> SetMembers<T>(string key)
+        {
+            key = AddSysCustomKey(key);
+            return Do(db =>
+            {
+                RedisValue[] values = db.SetMembers(key);
+                return ConvertList<T>(values);
+
+            });
+        }
+        /// <summary>
+        /// 删除Set集合中的Member
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool SetRemove<T>(string key, T value)
+        {
+            key = AddSysCustomKey(key);
+            return Do(db => db.SetRemove(key, ConvertJson<T>(value)));
+        }
+
+        #endregion
+
+        #region 异步方法 
+        /// <summary>
+        /// 判断Set中某个member是否存在
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="dataKey"></param>
+        /// <returns></returns>
+        public async Task<bool> SetExistsAsync(string key, string dataKey)
+        {
+            key = AddSysCustomKey(key);
+            return await Do(db => db.SetContainsAsync(key, dataKey));
+        }
+        /// <summary>
+        /// 添加元素至Set中
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public async Task<bool> SetAddAsync<T>(string key, T value)
+        {
+            key = AddSysCustomKey(key);
+            return await Do(db => db.SetAddAsync(key, ConvertJson<T>(value)));
+        }
+        /// <summary>
+        /// 获取Set集合中所有Members
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public async Task<List<T>> SetMembersAsync<T>(string key)
+        {
+            key = AddSysCustomKey(key);
+            RedisValue[] values = await Do(db => db.SetMembersAsync(key));
+            return ConvertList<T>(values);
+        }
+
+        /// <summary>
+        /// 删除Set集合中的Member
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public async Task<bool> SetRemoveAsync<T>(string key, T value)
+        {
+            key = AddSysCustomKey(key);
+            return await Do(db => db.SetRemoveAsync(key, ConvertJson<T>(value)));
+        }
+        #endregion
+
+
+        #endregion
+
+
+
         #region Hash
 
         #region 同步方法
@@ -259,6 +372,19 @@ namespace DataFusion.Interfaces.Utils
         {
             key = AddSysCustomKey(key);
             return Do(db => db.HashExists(key, dataKey));
+        }
+        /// <summary>
+        /// 获取hash中所有的key和Value
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public List<HashEntry> HashGetAll(string key)
+        {
+            key = AddSysCustomKey(key);
+            return Do(db =>
+            {
+                return db.HashGetAll(key).ToList();
+            });
         }
 
         /// <summary>
@@ -359,7 +485,7 @@ namespace DataFusion.Interfaces.Utils
             return Do(db =>
             {
                 RedisValue[] values = db.HashKeys(key);
-                return ConvetList<T>(values);
+                return ConvertList<T>(values);
             });
         }
         public IEnumerable<T> HashKeys<T>(string key, Func<RedisValue, T> func)
@@ -482,7 +608,7 @@ namespace DataFusion.Interfaces.Utils
         {
             key = AddSysCustomKey(key);
             RedisValue[] values = await Do(db => db.HashKeysAsync(key));
-            return ConvetList<T>(values);
+            return ConvertList<T>(values);
         }
         public async Task<IEnumerable<T>> HashKeysAsync<T>(string key, Func<RedisValue, T> func)
         {
@@ -528,7 +654,7 @@ namespace DataFusion.Interfaces.Utils
             return Do(redis =>
             {
                 var values = redis.ListRange(key);
-                return ConvetList<T>(values);
+                return ConvertList<T>(values);
             });
         }
 
@@ -622,7 +748,7 @@ namespace DataFusion.Interfaces.Utils
         {
             key = AddSysCustomKey(key);
             var values = await Do(redis => redis.ListRangeAsync(key));
-            return ConvetList<T>(values);
+            return ConvertList<T>(values);
         }
 
         /// <summary>
@@ -727,7 +853,7 @@ namespace DataFusion.Interfaces.Utils
             return Do(redis =>
             {
                 var values = redis.SortedSetRangeByRank(key);
-                return ConvetList<T>(values);
+                return ConvertList<T>(values);
             });
         }
 
@@ -778,7 +904,7 @@ namespace DataFusion.Interfaces.Utils
         {
             key = AddSysCustomKey(key);
             var values = await Do(redis => redis.SortedSetRangeByRankAsync(key));
-            return ConvetList<T>(values);
+            return ConvertList<T>(values);
         }
 
         /// <summary>
@@ -967,7 +1093,7 @@ namespace DataFusion.Interfaces.Utils
             return JsonConvert.DeserializeObject<T>(value);
         }
 
-        private List<T> ConvetList<T>(RedisValue[] values)
+        private List<T> ConvertList<T>(RedisValue[] values)
         {
             List<T> result = new List<T>();
             foreach (var item in values)

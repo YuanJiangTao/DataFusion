@@ -14,18 +14,25 @@ namespace DataFusion.Interfaces
     }
 
 
-    public class RedisConfig:MarshalByRefObject
+    public class RedisConfig : MarshalByRefObject
     {
         public string ServerIp { get; set; }
 
         public int ServerPort { get; set; }
 
         public override string ToString() => $"ServerIp:{ServerIp}\tServerPort:{ServerPort}";
-
     }
 
-    public class ProtocalConfig:MarshalByRefObject
+    public class ProtocalConfig : MarshalByRefObject
     {
+        public string MineName { get; set; }
+
+        public string MineCode { get; set; }
+
+        public DateTime BuildTime { get; set; }
+
+        public PluginType PluginType { get; set; }
+
         public bool IsEnableSafetyMonitorProtocal { get; set; }
 
         public bool IsEnableEpipemonitorProtocal { get; set; }
@@ -38,7 +45,11 @@ namespace DataFusion.Interfaces
                 $"IsEnableEpipemonitorProtocal:{IsEnableEpipemonitorProtocal}\t" +
                 $"IsEnableVideoMonitorProtocal:{IsEnableVideoMonitorProtocal}";
         }
-
     }
-    
+    public enum PluginType
+    {
+        FileUc=0x01,
+        ApiUc=0x02
+    }
+
 }

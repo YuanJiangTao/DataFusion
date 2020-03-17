@@ -7,7 +7,7 @@ using Unity;
 
 namespace DataFusion.ViewModel
 {
-    class PluginEntryController
+    public class PluginEntryController
     {
         private IUnityContainer _unityContainer;
         public PluginEntryController(IUnityContainer container)
