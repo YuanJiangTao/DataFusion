@@ -38,12 +38,16 @@ namespace DataFusion.ViewModel
             container.RegisterType<DataService>();
 
             container.RegisterType<MainViewModel>();
+            container.RegisterType<PluginStateDisplayViewModel>();
 
             Main = container.Resolve<MainViewModel>();
+
+            PluginStateDisplayView = container.Resolve<PluginStateDisplayViewModel>();
         }
         public MainViewModel Main { get; private set; }
 
-        //public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
+        public PluginStateDisplayViewModel PluginStateDisplayView { get; private set; }
+
 
         public static void Cleanup()
         {

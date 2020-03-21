@@ -1,26 +1,24 @@
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Messaging;
-using DataFusion.Services;
 using DataFusion.Data;
-using System.Windows;
-using DataFusion.Model;
+using DataFusion.Services;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.ObjectModel;
-using GalaSoft.MvvmLight.Command;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using GalaSoft.MvvmLight.Ioc;
-using System.Diagnostics;
 
 namespace DataFusion.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
         private DataService _dataService;
+        private MessageService _messageService;
 
-        public MainViewModel(DataService dataService, PluginEntryController pluginEntryController)
+        public MainViewModel(DataService dataService, PluginEntryController pluginEntryController, MessageService messageService)
         {
             _dataService = dataService;
+            _messageService = messageService;
             Messenger.Default.Register<MenuViewModel>(this, MessageToken.LoadShowContent, t =>
              {
                  if (t != null)
@@ -34,6 +32,7 @@ namespace DataFusion.ViewModel
                  }
              });
             MenuInfoList = _dataService.GetMainItemMenuViewModels();
+
         }
 
         public string SystemTitle  => "数据融合";
@@ -49,6 +48,7 @@ namespace DataFusion.ViewModel
 
         private void SwitchDemo(SelectionChangedEventArgs e)
         {
+            _messageService.Warnging("开始载入...");
             if (e.AddedItems.Count == 0) return;
             if ((e.Source as Selector).SelectedItem is MenuViewModel source)
             {

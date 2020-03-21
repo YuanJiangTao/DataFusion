@@ -105,6 +105,7 @@
     <Compile Include="Model\ClientRunInfo.cs" />
     <Compile Include="Model\MineInfoModel.cs" />
     <Compile Include="Model\MineProtocalConfigModel.cs" />
+    <Compile Include="Model\PluginEntry.cs" />
     <Compile Include="Model\SystemConfigModel.cs" />
     <Compile Include="Resources\Converter\HatchBrushConverter.cs" />
     <Compile Include="Resources\Converter\String2BrushConverter.cs" />
@@ -116,12 +117,16 @@
       <DependentUpon>PluginStateDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\Constant.cs" />
+    <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="ViewModel\MainItemMenuViewModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
     <Compile Include="ViewModel\MineDisplayViewModel.cs" />
     <Compile Include="ViewModel\NoUserContentViewModel.cs" />
     <Compile Include="ViewModel\PluginEditViewModel.cs" />
     <Compile Include="ViewModel\PluginEntryController.cs" />
+    <Compile Include="ViewModel\PluginEntryViewModel.cs" />
+    <Compile Include="ViewModel\PluginStateDisplayViewModel.cs" />
+    <Compile Include="ViewModel\SystemConfigViewModel.cs" />
     <Compile Include="Views\LeftMainContent.xaml.cs">
       <DependentUpon>LeftMainContent.xaml</DependentUpon>
     </Compile>
@@ -245,9 +250,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Converter\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Img\SortAscending_grey_16x.png" />
   </ItemGroup>

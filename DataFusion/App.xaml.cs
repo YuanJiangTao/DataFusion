@@ -2,6 +2,7 @@
 using DataFusion.Data;
 using DataFusion.Interfaces;
 using DataFusion.Interfaces.Utils;
+using DataFusion.Services;
 using DataFusion.ViewModel;
 using GalaSoft.MvvmLight.Ioc;
 using System;
@@ -63,6 +64,8 @@ namespace DataFusion
             container.RegisterType<ILogDogCollar, LogDogCollar>(Constant.ClietnName, Singleton());
             var logDogCollar = container.Resolve<ILogDogCollar>(Constant.ClietnName);
             logDogCollar.Setup(Constant.ClietnName, Constant.ClietnName);
+            container.RegisterType<DataService>(Singleton());
+            container.RegisterType<PluginEntryController>(Singleton());
         }
         private static ContainerControlledLifetimeManager Singleton()
         {
