@@ -14,11 +14,13 @@ namespace DataFusion.ViewModel
     {
         private DataService _dataService;
         private MessageService _messageService;
+        private PluginEntryController _pluginEntryController;
 
         public MainViewModel(DataService dataService, PluginEntryController pluginEntryController, MessageService messageService)
         {
             _dataService = dataService;
             _messageService = messageService;
+            _pluginEntryController = pluginEntryController;
             Messenger.Default.Register<MenuViewModel>(this, MessageToken.LoadShowContent, t =>
              {
                  if (t != null)
@@ -32,10 +34,32 @@ namespace DataFusion.ViewModel
                  }
              });
             MenuInfoList = _dataService.GetMainItemMenuViewModels();
+            LoadPluginMenuItems();
+        }
+
+        private async void LoadPluginMenuItems()
+        {
+            var pluginMenuItem = await _pluginEntryController.LoadPluginEntiesAsync();
+            foreach (var subMenuItem in pluginMenuItem)
+            {
+                MenuInfoList.Add(subMenuItem);
+            }
+        }
+
+        public string SystemTitle => "数据融合";
+
+        public RelayCommand LoadCommand => new RelayCommand(Load);
+        //new Lazy<RelayCommand>(() =>
+        //new RelayCommand(Load)).Value;
+
+        private void Load()
+        {
 
         }
 
-        public string SystemTitle  => "数据融合";
+
+
+
 
         /// <summary>
         /// 切换例子的命令
@@ -59,7 +83,7 @@ namespace DataFusion.ViewModel
         }
 
 
-        private ObservableCollection<MenuViewModel> _mainItemMenuViews;
+        private ObservableCollection<MenuViewModel> _mainItemMenuViews = new ObservableCollection<MenuViewModel>();
 
         public ObservableCollection<MenuViewModel> MenuInfoList
         {

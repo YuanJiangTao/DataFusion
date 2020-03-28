@@ -62,6 +62,7 @@
     </Reference>
     <Reference Include="StackExchange.Redis, Version=1.2.6.0, Culture=neutral, PublicKeyToken=null" />
     <Reference Include="System" />
+    <Reference Include="System.AddIn.Contract" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -76,6 +77,7 @@
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.4.1.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Presentation" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -104,8 +106,7 @@
     <Compile Include="LogD.cs" />
     <Compile Include="Model\ClientRunInfo.cs" />
     <Compile Include="Model\MineInfoModel.cs" />
-    <Compile Include="Model\MineProtocalConfigModel.cs" />
-    <Compile Include="Model\PluginEntry.cs" />
+    <Compile Include="Model\PluginEntrySg.cs" />
     <Compile Include="Model\SystemConfigModel.cs" />
     <Compile Include="Resources\Converter\HatchBrushConverter.cs" />
     <Compile Include="Resources\Converter\String2BrushConverter.cs" />
@@ -118,15 +119,23 @@
     </Compile>
     <Compile Include="Data\Constant.cs" />
     <Compile Include="Utils\PathUtils.cs" />
+    <Compile Include="Utils\ProductUtil.cs" />
     <Compile Include="ViewModel\MainItemMenuViewModel.cs" />
     <Compile Include="ViewModel\MenuViewModel.cs" />
     <Compile Include="ViewModel\MineDisplayViewModel.cs" />
     <Compile Include="ViewModel\NoUserContentViewModel.cs" />
     <Compile Include="ViewModel\PluginEditViewModel.cs" />
+    <Compile Include="ViewModel\PluginEntry.cs" />
     <Compile Include="ViewModel\PluginEntryController.cs" />
     <Compile Include="ViewModel\PluginEntryViewModel.cs" />
+    <Compile Include="ViewModel\PluginProcessProxy.cs" />
     <Compile Include="ViewModel\PluginStateDisplayViewModel.cs" />
+    <Compile Include="ViewModel\PluginViewOfHost.cs" />
+    <Compile Include="ViewModel\Storages\SystemConfigInfoSg.cs" />
     <Compile Include="ViewModel\SystemConfigViewModel.cs" />
+    <Compile Include="Views\ErrorWindow.xaml.cs">
+      <DependentUpon>ErrorWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\LeftMainContent.xaml.cs">
       <DependentUpon>LeftMainContent.xaml</DependentUpon>
     </Compile>
@@ -138,6 +147,9 @@
     </Compile>
     <Compile Include="Views\NoUserContentView.xaml.cs">
       <DependentUpon>NoUserContentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PluginStateDisplayView.xaml.cs">
+      <DependentUpon>PluginStateDisplayView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SplashView.xaml.cs">
       <DependentUpon>SplashView.xaml</DependentUpon>
@@ -198,11 +210,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Resources\Themes\Uc\ExpanderExtensControl.xaml">
+    <Page Include="UserControls\PluginStateDisplay.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\PluginStateDisplay.xaml">
+    <Page Include="Views\ErrorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -215,6 +227,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NoUserContentView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PluginStateDisplayView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -250,7 +266,9 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="Resources\Img\file.png" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Img\SortAscending_grey_16x.png" />
   </ItemGroup>
@@ -261,6 +279,10 @@
     <ProjectReference Include="..\DataFusion.Interfaces\DataFusion.Interfaces.csproj">
       <Project>{81496566-a57a-442b-b503-53ad6e497f62}</Project>
       <Name>DataFusion.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataFusion.PluginHosting\DataFusion.PluginHosting.csproj">
+      <Project>{AC82FEBA-E8D2-4054-863C-2044764DF639}</Project>
+      <Name>DataFusion.PluginHosting</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

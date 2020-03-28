@@ -3,21 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
+using Newtonsoft.Json;
 
-namespace DataFusion.Model
+namespace DataFusion.Interfaces
 {
-    public class MineProtocalConfigModel : ObservableObject
+    [Serializable]
+    public class MineProtocalConfigInfo
     {
-        public string Key { get; private set; }
+        public MineProtocalConfigInfo()
+        {
+
+        }
+        [JsonIgnore]
+        public string Key { get => $"{MineName}:{MineCode}"; }
 
         public string MineName { get; set; }
 
         public string MineCode { get; set; }
 
         public DateTime CreatTime { get; set; }
-
-        public PluginType PluginType { get; set; }
 
         public bool IsEnableSafetyMonitorProtocal { get; set; }
 
@@ -32,10 +36,10 @@ namespace DataFusion.Model
         public int VideoMonitorRunState { get; set; }
 
         public int State { get; set; }
-    }
 
-    public enum PluginType
-    {
-        FilePlugin = 0x01,
+        public string PluginTitle { get; set; }
+
+        public string PluginVersion { get; set; }
+
     }
 }

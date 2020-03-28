@@ -10,5 +10,6 @@ namespace DataFusion.Interfaces
     public interface IPlugin : IServiceProvider, IDisposable
     {
         FrameworkElement CreateControl();
+        void Load();
     }
 }

@@ -3,27 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using GalaSoft.MvvmLight;
 namespace DataFusion.Model
 {
-    public class SystemConfigModel : ObservableObject
+    [Serializable]
+    public class SystemConfigSg:ObservableObject
     {
-        public SystemConfigModel()
+        public SystemConfigSg()
         {
 
+
         }
-        private string _redisServer;
+        private string _redisServer = "127.0.0.1";
+        private string _redisPwd = "gl";
 
         public string RedisServer
         {
             get => _redisServer;
-            set => Set(ref _redisServer, value);
+            set
+            {
+                Set(ref _redisServer, value);
+            }
         }
-        private string _redisPwd;
         public string RedisPwd
         {
             get => _redisPwd;
-            set => Set(ref _redisPwd, value);
+            set
+            {
+                Set(ref _redisPwd, value);
+            }
         }
     }
 }

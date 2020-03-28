@@ -13,9 +13,9 @@
         xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Platform"
         DataContext="{Binding Main,Source={StaticResource Locator}}">
     <i:Interaction.Triggers>
-        <!--<i:EventTrigger EventName="Loaded">
-            <cmd:EventToCommand Command="{Binding Load}"></cmd:EventToCommand>
-        </i:EventTrigger>-->
+        <i:EventTrigger EventName="Loaded">
+            <cmd:EventToCommand Command="{Binding LoadCommand}"></cmd:EventToCommand>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
     <hc:Window.NonClientAreaContent>
         <views:NoUserContentView></views:NoUserContentView>

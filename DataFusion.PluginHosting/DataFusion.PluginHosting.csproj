@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>ac82feba-e8d2-4054-863c-2044764df639</ProjectGuid>
+    <ProjectGuid>{AC82FEBA-E8D2-4054-863C-2044764DF639}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DataFusion.PluginHosting</RootNamespace>
@@ -31,24 +31,39 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System"/>
-    
-    <Reference Include="System.Core"/>
-    <Reference Include="System.Xml.Linq"/>
-    <Reference Include="System.Data.DataSetExtensions"/>
-    
-    
-    <Reference Include="Microsoft.CSharp"/>
-    
-    <Reference Include="System.Data"/>
-    
-    <Reference Include="System.Net.Http"/>
-    
-    <Reference Include="System.Xml"/>
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.AddIn.Contract" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Windows.Presentation" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="AssemblyResolver.cs" />
+    <Compile Include="ExceptionUtil.cs" />
+    <Compile Include="IpcServices.cs" />
+    <Compile Include="IPluginLoader.cs" />
+    <Compile Include="IRemotePlugin.cs" />
+    <Compile Include="NativeHandleContractInsulator.cs" />
+    <Compile Include="PluginCreator.cs" />
+    <Compile Include="PluginLoader.cs" />
+    <Compile Include="PluginLoaderBootstrapper.cs" />
+    <Compile Include="ProcessMonitor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RemotePlugin.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataFusion.Interfaces\DataFusion.Interfaces.csproj">
+      <Project>{81496566-A57A-442B-B503-53AD6E497F62}</Project>
+      <Name>DataFusion.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
- </Project>
+</Project>

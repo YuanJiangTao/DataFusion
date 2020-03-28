@@ -31,22 +31,28 @@ namespace DataFusion.ViewModel
             //SimpleIoc.Default.Register<MainViewModel>();
             //SimpleIoc.Default.Register<PluginEditViewModel>();
         }
-
+        private IUnityContainer _container;
         public void IniContainer(IUnityContainer container)
         {
-            container.RegisterType<PluginEntryController>();
-            container.RegisterType<DataService>();
 
             container.RegisterType<MainViewModel>();
             container.RegisterType<PluginStateDisplayViewModel>();
+            container.RegisterType<NoUserContentViewModel>();
+            container.RegisterType<SystemConfigViewModel>();
+            _container = container;
 
-            Main = container.Resolve<MainViewModel>();
 
-            PluginStateDisplayView = container.Resolve<PluginStateDisplayViewModel>();
+
         }
-        public MainViewModel Main { get; private set; }
 
-        public PluginStateDisplayViewModel PluginStateDisplayView { get; private set; }
+
+        public MainViewModel Main => _container.Resolve<MainViewModel>();
+
+        public PluginStateDisplayViewModel PluginStateDisplayView => _container.Resolve<PluginStateDisplayViewModel>();
+
+        public NoUserContentViewModel NoUserContentViewModel => _container.Resolve<NoUserContentViewModel>();
+
+        public SystemConfigViewModel SystemConfigViewModel => _container.Resolve<SystemConfigViewModel>();
 
 
         public static void Cleanup()

@@ -13,6 +13,7 @@ using DataFusion.Data;
 using Newtonsoft.Json;
 using DataFusion.Interfaces;
 using StackExchange.Redis;
+using System.IO;
 
 namespace DataFusion.Services
 {
@@ -22,13 +23,18 @@ namespace DataFusion.Services
 
         private string _macAddress = "";
 
+
         private RedisHelper _redis;
 
         public DataService()
         {
+
             _redis = new RedisHelper(0);
             _macAddress = SystemInfoUtil.GetMacAddress();
         }
+
+
+
 
         /// <summary>
         /// 从缓存中获取当前所有实例的运行信息
@@ -68,18 +74,17 @@ namespace DataFusion.Services
             return null;
         }
 
-        public IEnumerable<MineProtocalConfigModel> GetMineInfoModels()
+        public IEnumerable<MineProtocalConfigInfo> GetMineInfoModels()
         {
             var mineKeys = _redis.SetMembers<string>(_macAddress);
             foreach (var key in mineKeys)
             {
                 if (_redis.KeyExists(key))
                 {
-                    yield return _redis.StringGet<MineProtocalConfigModel>(key);
+                    yield return _redis.StringGet<MineProtocalConfigInfo>(key);
                 }
             }
         }
-
 
 
 
@@ -94,13 +99,13 @@ namespace DataFusion.Services
         /// 从缓存中获取当前系统的配置信息
         /// </summary>
         /// <returns></returns>
-        public SystemConfigModel GetSystemConfigModel()
+        public SystemConfigSg GetSystemConfigModel()
         {
             try
             {
                 var systemConfigStr = _redis.StringGet(_macAddress);
                 if (!string.IsNullOrEmpty(systemConfigStr))
-                    return JsonConvert.DeserializeObject<SystemConfigModel>(systemConfigStr);
+                    return JsonConvert.DeserializeObject<SystemConfigSg>(systemConfigStr);
             }
             catch (Exception ex)
             {

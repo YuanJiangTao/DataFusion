@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataFusion.PluginHosting
+namespace DataFusion.ViewModel.Storages
 {
-    public class Class1
+    class SystemConfigInfoSg
     {
     }
 }

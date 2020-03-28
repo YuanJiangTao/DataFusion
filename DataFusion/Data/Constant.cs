@@ -15,5 +15,9 @@ namespace DataFusion.Data
         public const string ClietnName = "DataFusion";
 
         public const string PluginsFolder = "Plugins";
+
+        public const string ProtocalFolder = "Protocals";
+
+        public const string SystemConfig = "systemConfig.config";
     }
 }

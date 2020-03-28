@@ -20,5 +20,10 @@ namespace DataFusion.Interfaces
         {
             return null;
         }
+
+        public void Load()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

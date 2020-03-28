@@ -11,7 +11,7 @@
              xmlns:model="clr-namespace:DataFusion.Model"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-             xmlns:command="http://www.galasoft.ch/mvvmlight"
+             xmlns:command="http://www.galasoft.ch/mvvmlight" 
              DataContext="{Binding Main,Source={StaticResource Locator}}"
              >
     <Border.Resources>
@@ -59,15 +59,6 @@
                         <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
                             <Image Width="15" Height="15" Source="{Binding ImageName}" Margin="0,0,10,0" />
                             <ListBoxItem Content="{Binding Header}"    />
-                            <!--<Expander Background="{x:Null}" IsExpanded="False" Width="305"  Header="{Binding Header}" Foreground="Red"  BorderBrush="{DynamicResource BorderBrush}" HorizontalAlignment="Right"  >
-                                <ListView ItemsSource="{Binding SubItems}"    ScrollViewer.HorizontalScrollBarVisibility="Disabled"   Style="{StaticResource ListBoxTransparent}"  SelectionMode="Single">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate DataType="{x:Type model:SubMenuItem }">
-                                            <TextBlock Text="{Binding Name}" Padding="20 5" />
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </Expander>-->
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
