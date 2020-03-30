@@ -5,10 +5,181 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DataFusion.Views"
              mc:Ignorable="d" 
+             xmlns:converter="clr-namespace:DataFusion.Resources.Converter"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             DataContext="{Binding PluginStateDisplayView,Source={StaticResource Locator}}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
+        <converter:ProtocalRunStateConverter x:Key="ProtocalRunStateConverter"></converter:ProtocalRunStateConverter>
     </UserControl.Resources>
-    <Grid>
-            
+    <Grid   >
+        <ListView ItemsSource="{Binding MineProtocalConfigInfos }" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                    <Setter Property="FontFamily" Value="Segoe UI" />
+                    <Setter Property="FontSize" Value="11"/>
+                    <Setter Property="Margin" Value="10" />
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border  Background="{DynamicResource RegionBrush}" CornerRadius="10" Effect="{StaticResource EffectShadow4}">
+
+                                    <Grid Width="300" Height="150"  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Border  Grid.Row="0" CornerRadius="10,10,0,0" Background="{DynamicResource TitleBrush}">
+                                            <TextBlock  FontSize="15" Style="{StaticResource TextBlockDefault}" Foreground="White" Text="{Binding MineName}" />
+                                        </Border>
+
+                                        <Grid Grid.Row="1">
+                                            <Canvas>
+                                                <Image x:Name="image"  Canvas.Top="30" Canvas.Left="0" Source="../Resources/Img/express.png" Width="40" Height="40">
+                                                    <Image.RenderTransform>
+                                                        <TransformGroup>
+                                                            <ScaleTransform></ScaleTransform>
+                                                            <RotateTransform></RotateTransform>
+                                                        </TransformGroup>
+                                                    </Image.RenderTransform>
+                                                    <!--<Image.Style>
+                                                    <Style>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Value="True">
+                                                                <DataTrigger.Binding>
+                                                                    <MultiBinding>
+                                                                        <Binding ></Binding>
+                                                                    </MultiBinding>
+                                                                </DataTrigger.Binding>
+                                                                <Setter Property="Image.Visibility" Value="Visible"></Setter>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>-->
+                                                    <Image.Triggers>
+                                                        <EventTrigger RoutedEvent="Loaded">
+                                                            <BeginStoryboard>
+                                                                <Storyboard SpeedRatio="1.5">
+                                                                    <DoubleAnimation Duration="0:0:2.5" Storyboard.TargetName="image" 
+                                                                                     Storyboard.TargetProperty="Opacity" From="0.2" To="1" />
+                                                                    <DoubleAnimation Storyboard.TargetName="image"   Storyboard.TargetProperty="RenderTransform.Children[1].Angle"
+                                                                                     From="70" To="0" Duration="0:0:2" />
+                                                                    <DoubleAnimation Storyboard.TargetName="image"
+                                                                                     Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"
+                                                                                     From="0" To="1" Duration="0:0:2" AccelerationRatio="1" />
+                                                                    <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" 
+                                                                                     From="0" To="1" Duration="0:0:2" AccelerationRatio="1" />
+                                                                    <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX"  To="0.98" BeginTime="0:0:2" Duration="0:0:0.05"  DecelerationRatio="1"></DoubleAnimation>
+                                                                    <DoubleAnimation Storyboard.TargetName="image"  Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY"
+                                                                                     To="0.98" BeginTime="0:0:2" Duration="0:0:0.05" DecelerationRatio="1"></DoubleAnimation>
+                                                                    <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" To="1" BeginTime="0:0:2.05" Duration="0:0:0.2"  AccelerationRatio="1"></DoubleAnimation>
+                                                                    <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="1" BeginTime="0:0:2.05" Duration="0:0:0.2" AccelerationRatio="1"></DoubleAnimation>
+                                                                    <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="(Canvas.Right)" To="40" Duration="0:0:4" From="40" BeginTime="0:0:2.05" AccelerationRatio="1" />
+                                                                </Storyboard>
+                                                            </BeginStoryboard>
+                                                        </EventTrigger>
+                                                    </Image.Triggers>
+                                                </Image>
+                                            </Canvas>
+                                        </Grid>
+                                        <hc:LoadingLine Grid.Row="2"/>
+                                    </Grid>
+                                    <Border.ToolTip>
+                                        <ToolTip>
+                                            <ToolTip.Style>
+                                                <Style TargetType="ToolTip">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate>
+                                                                <Border  Background="{DynamicResource RegionBrush}" CornerRadius="10">
+                                                                    <StackPanel>
+                                                                        <Grid>
+                                                                            <Grid.Style>
+                                                                                <Style>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding IsEnableSafetyMonitorProtocal}" Value="False">
+                                                                                            <Setter Property="Grid.Visibility" Value="Hidden"></Setter>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Grid.Style>
+                                                                            <Grid.RowDefinitions>
+                                                                                <RowDefinition/>
+                                                                            </Grid.RowDefinitions>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition/>
+                                                                                <ColumnDefinition/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Label Grid.Row="0" Grid.Column="0"  Content="安全监控系统运行状态:"/>
+                                                                            <Label Grid.Row="0"  Grid.Column="1" Content="{Binding SafetyMonitorRunState,Converter={StaticResource ProtocalRunStateConverter} }"/>
+                                                                        </Grid>
+                                                                        <Grid>
+                                                                            <Grid.Style>
+                                                                                <Style>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding IsEnableEpipemonitorProtocal}" Value="False">
+                                                                                            <Setter Property="Grid.Visibility" Value="Hidden"></Setter>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Grid.Style>
+                                                                            <Grid.RowDefinitions>
+                                                                                <RowDefinition/>
+                                                                            </Grid.RowDefinitions>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition/>
+                                                                                <ColumnDefinition/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Label Grid.Row="0" Grid.Column="0"  Content="瓦斯抽采系统运行状态:"/>
+                                                                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding EpipemonitorRunState,Converter={StaticResource ProtocalRunStateConverter} }"/>
+                                                                        </Grid>
+                                                                        <Grid>
+                                                                            <Grid.Style>
+                                                                                <Style>
+                                                                                    <Style.Triggers>
+                                                                                        <DataTrigger Binding="{Binding IsEnableVideoMonitorProtocal}" Value="False">
+                                                                                            <Setter Property="Grid.Visibility" Value="Hidden"></Setter>
+                                                                                        </DataTrigger>
+                                                                                    </Style.Triggers>
+                                                                                </Style>
+                                                                            </Grid.Style>
+                                                                            <Grid.RowDefinitions>
+                                                                                <RowDefinition/>
+                                                                            </Grid.RowDefinitions>
+                                                                            <Grid.ColumnDefinitions>
+                                                                                <ColumnDefinition/>
+                                                                                <ColumnDefinition/>
+                                                                            </Grid.ColumnDefinitions>
+                                                                            <Label Grid.Row="0" Grid.Column="0" Content="视频监控系统运行状态:"/>
+                                                                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding VideoMonitorRunState,Converter={StaticResource ProtocalRunStateConverter} }"/>
+                                                                        </Grid>
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ToolTip.Style>
+                                        </ToolTip>
+                                    </Border.ToolTip>
+                                </Border>
+
+                            </ControlTemplate>
+
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+        </ListView>
     </Grid>
 </UserControl>

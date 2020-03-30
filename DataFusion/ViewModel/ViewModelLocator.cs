@@ -34,7 +34,6 @@ namespace DataFusion.ViewModel
         private IUnityContainer _container;
         public void IniContainer(IUnityContainer container)
         {
-
             container.RegisterType<MainViewModel>();
             container.RegisterType<PluginStateDisplayViewModel>();
             container.RegisterType<NoUserContentViewModel>();

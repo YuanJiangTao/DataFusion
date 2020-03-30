@@ -8,5 +8,6 @@ namespace DataFusion.Resources.Converter
 {
     class HatchBrushConverter
     {
+
     }
 }

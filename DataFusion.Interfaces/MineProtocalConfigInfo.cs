@@ -25,6 +25,9 @@ namespace DataFusion.Interfaces
 
         public bool IsEnableSafetyMonitorProtocal { get; set; }
 
+        /// <summary>
+        /// 1-正在运行；0-暂停
+        /// </summary>
         public int SafetyMonitorRunState { get; set; }
 
         public bool IsEnableEpipemonitorProtocal { get; set; }

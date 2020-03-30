@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using DataFusion.Interfaces;
 using StackExchange.Redis;
 using System.IO;
+using DataFusion.Views;
 
 namespace DataFusion.Services
 {
@@ -122,7 +123,7 @@ namespace DataFusion.Services
                 {
                     Header="插件管理",
                     ImageName=$"../Resources/Img/menu.png",
-                    Screen=new PluginStateDisplay(),
+                    Screen=new PluginStateDisplayView(),
                 }
             };
         }

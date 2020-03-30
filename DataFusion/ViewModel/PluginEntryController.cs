@@ -38,6 +38,11 @@ namespace DataFusion.ViewModel
             _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
             try
             {
+#if DEBUG
+                Test();
+#endif
+
+
                 ScanPluginEntries();
                 ReadMineProtocalConfigInfos();
             }
@@ -45,6 +50,23 @@ namespace DataFusion.ViewModel
             {
                 LogD.Error("扫描插件错误:" + ex);
             }
+        }
+
+        private void Test()
+        {
+            MineProtocalConfigInfo configInfo = new MineProtocalConfigInfo()
+            {
+                MineName="车集矿",
+                MineCode="0123456789",
+                IsEnableEpipemonitorProtocal=true,
+                IsEnableSafetyMonitorProtocal=true,
+                IsEnableVideoMonitorProtocal=true,
+                EpipemonitorRunState=1,
+                SafetyMonitorRunState=1,
+                VideoMonitorRunState=1,
+                State=1
+            };
+            MineProtocalConfigInfos.Add(configInfo);
         }
 
         private Assembly CurrentDomain_TypeResolve(object sender, ResolveEventArgs args)
@@ -66,7 +88,7 @@ namespace DataFusion.ViewModel
             return null;
         }
 
-        public ObservableCollection<MineProtocalConfigInfo> MineProtocalConfigInfos { get; set; }
+        public ObservableCollection<MineProtocalConfigInfo> MineProtocalConfigInfos { get; private  set; }
 
         public ObservableCollection<PluginEntrySg> PluginEntries { get; private set; }
 
