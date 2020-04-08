@@ -44,5 +44,10 @@ namespace DataFusion.Interfaces
 
         public string PluginVersion { get; set; }
 
+        /// <summary>
+        /// 用来标明该煤矿插件是否启用
+        /// </summary>
+        public bool IsEnable { get; set; } = true;
+
     }
 }

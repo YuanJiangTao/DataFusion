@@ -34,14 +34,14 @@ namespace DataFusion.ViewModel
         private IUnityContainer _container;
         public void IniContainer(IUnityContainer container)
         {
+            _container = container;
             container.RegisterType<MainViewModel>();
             container.RegisterType<PluginStateDisplayViewModel>();
             container.RegisterType<NoUserContentViewModel>();
             container.RegisterType<SystemConfigViewModel>();
-            _container = container;
-
-
-
+            container.RegisterType<PluginEditViewModel>();
+            container.RegisterType<PasswordDiaglogViewModel>();
+            container.RegisterType<ProtocalAddWindowViewModel>();
         }
 
 
@@ -52,6 +52,11 @@ namespace DataFusion.ViewModel
         public NoUserContentViewModel NoUserContentViewModel => _container.Resolve<NoUserContentViewModel>();
 
         public SystemConfigViewModel SystemConfigViewModel => _container.Resolve<SystemConfigViewModel>();
+        public PluginEditViewModel PluginEditViewModel => _container.Resolve<PluginEditViewModel>();
+
+        public PasswordDiaglogViewModel DiaglogViewModel => _container.Resolve<PasswordDiaglogViewModel>();
+
+        public ProtocalAddWindowViewModel ProtocalAddWindowViewModel => _container.Resolve<ProtocalAddWindowViewModel>();
 
 
         public static void Cleanup()

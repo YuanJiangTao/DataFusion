@@ -28,10 +28,16 @@ namespace DataFusion.ViewModel
         private readonly TaskScheduler _scheduler;
         public PluginEntryController(IUnityContainer container)
         {
-            //Messenger.Default.Register
+            Messenger.Default.Register<PluginEntryViewModel>(this, MessageToken.UnloadEntry, Unload);
+            Messenger.Default.Register<PluginEntryViewModel>(this, MessageToken.LoadEntry, Load);
+            Messenger.Default.Register<PluginEntryViewModel>(this, MessageToken.DeleteProtocal, Delete);
+            Messenger.Default.Register<MineProtocalConfigInfo>(this, MessageToken.AddProtocal, Load);
+            
+
             PluginEntries = new ObservableCollection<PluginEntrySg>();
             MineProtocalConfigInfos = new ObservableCollection<MineProtocalConfigInfo>();
             LoadPluginEntryVms = new ObservableCollection<PluginEntryViewModel>();
+            ProtocalInfoModels = new ObservableCollection<ProtocalInfoModel>();
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             AppDomain.CurrentDomain.TypeResolve += CurrentDomain_TypeResolve;
             _unityContainer = container;
@@ -42,9 +48,10 @@ namespace DataFusion.ViewModel
                 Test();
 #endif
 
-
+                ReadMineProtocalInfos();
                 ScanPluginEntries();
                 ReadMineProtocalConfigInfos();
+
             }
             catch (Exception ex)
             {
@@ -52,19 +59,62 @@ namespace DataFusion.ViewModel
             }
         }
 
+        private void Delete(PluginEntryViewModel model)
+        {
+            Unload(model);
+            var protocalConfigInfo = MineProtocalConfigInfos.FirstOrDefault(p => p.MineName == model.MineName && p.MineCode == model.MineCode);
+            if (protocalConfigInfo != null)
+                MineProtocalConfigInfos.Remove(protocalConfigInfo);
+        }
+
+        private void Load(PluginEntryViewModel pluginEditViewModel)
+        {
+            try
+            {
+                if (pluginEditViewModel != null && pluginEditViewModel.MineProtocalConfigInfo != null)
+                {
+                    Load(pluginEditViewModel.MineProtocalConfigInfo);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogD.Error("加载插件错误:" + ex);
+            }
+
+        }
+
+        private void Unload(PluginEntryViewModel pluginEntryViewModel)
+        {
+            try
+            {
+                //TODO:卸载插件
+                //Messenger.Default.Send<string>()
+            }
+            catch (Exception ex)
+            {
+                LogD.Error("卸载插件错误:" + ex);
+            }
+        }
+        private async void Load(MineProtocalConfigInfo mineProtocalConfigInfo)
+        {
+            var menuItem = await LoadPluginEntryAsync(mineProtocalConfigInfo);
+            Messenger.Default.Send<MenuViewModel>(menuItem, MessageToken.AddMenuItem);
+        }
+
+
         private void Test()
         {
             MineProtocalConfigInfo configInfo = new MineProtocalConfigInfo()
             {
-                MineName="车集矿",
-                MineCode="0123456789",
-                IsEnableEpipemonitorProtocal=true,
-                IsEnableSafetyMonitorProtocal=true,
-                IsEnableVideoMonitorProtocal=true,
-                EpipemonitorRunState=1,
-                SafetyMonitorRunState=1,
-                VideoMonitorRunState=1,
-                State=1
+                MineName = "车集矿",
+                MineCode = "0123456789",
+                IsEnableEpipemonitorProtocal = false,
+                IsEnableSafetyMonitorProtocal = false,
+                IsEnableVideoMonitorProtocal = false,
+                EpipemonitorRunState = 1,
+                SafetyMonitorRunState = 1,
+                VideoMonitorRunState = 1,
+                State = 1
             };
             MineProtocalConfigInfos.Add(configInfo);
         }
@@ -88,11 +138,13 @@ namespace DataFusion.ViewModel
             return null;
         }
 
-        public ObservableCollection<MineProtocalConfigInfo> MineProtocalConfigInfos { get; private  set; }
+        public ObservableCollection<MineProtocalConfigInfo> MineProtocalConfigInfos { get; private set; }
 
         public ObservableCollection<PluginEntrySg> PluginEntries { get; private set; }
 
         public ObservableCollection<PluginEntryViewModel> LoadPluginEntryVms { get; set; }
+
+        public ObservableCollection<ProtocalInfoModel> ProtocalInfoModels { get; set; }
 
         private void ScanPluginEntries()
         {
@@ -132,7 +184,29 @@ namespace DataFusion.ViewModel
                 PluginEntries.Add(pluginEntrySg);
             }
         }
+        private void ReadMineProtocalInfos()
+        {
+            var protocalsFolder = PathUtils.Combine(Constant.ProtocalFolder);
+            if (!Directory.Exists(protocalsFolder))
+            {
+                Directory.CreateDirectory(protocalsFolder);
+            }
+            var prtocalDirs = Directory.GetDirectories(protocalsFolder);
+            foreach (var dir in prtocalDirs)
+            {
+                var protocalDllFile = Directory.GetFiles(dir, "*Protocal.dll").FirstOrDefault();
+                if (protocalDllFile == null)
+                    continue;
+                FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(protocalDllFile);
 
+                ProtocalInfoModels.Add(new ProtocalInfoModel()
+                {
+                    ProtocalName = fvi.ProductName,
+                    ProtocalVersion = fvi.FileVersion
+                });
+            }
+
+        }
         private void ReadMineProtocalConfigInfos()
         {
             var dataService = _unityContainer.Resolve<DataService>();
@@ -151,7 +225,7 @@ namespace DataFusion.ViewModel
         {
             var menuItemList = new List<MenuViewModel>();
             var tasks = MineProtocalConfigInfos.Select(p => LoadPluginEntryAsync(p));
-            var result= await Task.WhenAll(tasks);
+            var result = await Task.WhenAll(tasks);
             return result;
             //foreach (var item in MineProtocalConfigInfos)
             //{
@@ -215,7 +289,7 @@ namespace DataFusion.ViewModel
         }
         public void AddAvaiablePluginEntry(PluginEntrySg pluginEntrySg, MineProtocalConfigInfo mineProtocalConfigInfo)
         {
-            var pluginEntryVm = new PluginEntryViewModel(pluginEntrySg, mineProtocalConfigInfo);
+            var pluginEntryVm = new PluginEntryViewModel(pluginEntrySg, mineProtocalConfigInfo, false);
             LoadPluginEntryVms.Add(pluginEntryVm);
         }
 

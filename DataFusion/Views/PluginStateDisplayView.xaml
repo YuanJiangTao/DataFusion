@@ -11,6 +11,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:ProtocalRunStateConverter x:Key="ProtocalRunStateConverter"></converter:ProtocalRunStateConverter>
+        <converter:ProtocalEnabledStateConverter x:Key="ProtocalEnabledStateConverter"></converter:ProtocalEnabledStateConverter>
     </UserControl.Resources>
     <Grid   >
         <ListView ItemsSource="{Binding MineProtocalConfigInfos }" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -47,24 +48,27 @@
                                                             <RotateTransform></RotateTransform>
                                                         </TransformGroup>
                                                     </Image.RenderTransform>
-                                                    <!--<Image.Style>
-                                                    <Style>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Value="True">
-                                                                <DataTrigger.Binding>
-                                                                    <MultiBinding>
-                                                                        <Binding ></Binding>
-                                                                    </MultiBinding>
-                                                                </DataTrigger.Binding>
-                                                                <Setter Property="Image.Visibility" Value="Visible"></Setter>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Image.Style>-->
+                                                    <Image.Style>
+                                                        <Style>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Value="True">
+                                                                    <DataTrigger.Binding>
+                                                                        <MultiBinding Converter="{StaticResource ProtocalEnabledStateConverter}" >
+                                                                            <Binding Path="IsEnableSafetyMonitorProtocal" />
+                                                                            <Binding Path="IsEnableEpipemonitorProtocal"/>
+                                                                            <Binding Path="IsEnableVideoMonitorProtocal"/>
+                                                                        </MultiBinding>
+                                                                    </DataTrigger.Binding>
+                                                                    <Setter Property="Image.Visibility" Value="Hidden"></Setter>
+                                                                </DataTrigger>
+
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
                                                     <Image.Triggers>
                                                         <EventTrigger RoutedEvent="Loaded">
                                                             <BeginStoryboard>
-                                                                <Storyboard SpeedRatio="1.5">
+                                                                <Storyboard RepeatBehavior="Forever" SpeedRatio="1.5">
                                                                     <DoubleAnimation Duration="0:0:2.5" Storyboard.TargetName="image" 
                                                                                      Storyboard.TargetProperty="Opacity" From="0.2" To="1" />
                                                                     <DoubleAnimation Storyboard.TargetName="image"   Storyboard.TargetProperty="RenderTransform.Children[1].Angle"
@@ -79,11 +83,40 @@
                                                                                      To="0.98" BeginTime="0:0:2" Duration="0:0:0.05" DecelerationRatio="1"></DoubleAnimation>
                                                                     <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleX" To="1" BeginTime="0:0:2.05" Duration="0:0:0.2"  AccelerationRatio="1"></DoubleAnimation>
                                                                     <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="RenderTransform.Children[0].ScaleY" To="1" BeginTime="0:0:2.05" Duration="0:0:0.2" AccelerationRatio="1"></DoubleAnimation>
-                                                                    <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="(Canvas.Right)" To="40" Duration="0:0:4" From="40" BeginTime="0:0:2.05" AccelerationRatio="1" />
+                                                                    <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="(Canvas.Left)" To="260" Duration="0:0:4" From="30" BeginTime="0:0:2" AccelerationRatio="1" />
+                                                                    <DoubleAnimation Storyboard.TargetName="image" Storyboard.TargetProperty="Opacity" From="1" To="0.1" BeginTime="0:0:6" Duration="0:0:2" />
                                                                 </Storyboard>
                                                             </BeginStoryboard>
                                                         </EventTrigger>
                                                     </Image.Triggers>
+                                                </Image>
+                                                <Image x:Name="BreakDownImage" Canvas.Left="60" Visibility="Hidden"  Canvas.Top="15" Width="90" Height="90" Source="../Resources/Img/breakdown.png">
+                                                    <Image.Style>
+                                                        <Style>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Value="True">
+                                                                    <DataTrigger.Binding>
+                                                                        <MultiBinding Converter="{StaticResource ProtocalEnabledStateConverter}" >
+                                                                            <Binding Path="IsEnableSafetyMonitorProtocal" />
+                                                                            <Binding Path="IsEnableEpipemonitorProtocal"/>
+                                                                            <Binding Path="IsEnableVideoMonitorProtocal"/>
+                                                                        </MultiBinding>
+                                                                    </DataTrigger.Binding>
+                                                                    <Setter Property="Image.Visibility" Value="Visible"></Setter>
+                                                                </DataTrigger>
+                                                                <DataTrigger Value="False">
+                                                                    <DataTrigger.Binding>
+                                                                        <MultiBinding Converter="{StaticResource ProtocalEnabledStateConverter}" >
+                                                                            <Binding Path="IsEnableSafetyMonitorProtocal" />
+                                                                            <Binding Path="IsEnableEpipemonitorProtocal"/>
+                                                                            <Binding Path="IsEnableVideoMonitorProtocal"/>
+                                                                        </MultiBinding>
+                                                                    </DataTrigger.Binding>
+                                                                    <Setter Property="Image.Visibility" Value="Hidden" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
                                                 </Image>
                                             </Canvas>
                                         </Grid>
@@ -103,7 +136,7 @@
                                                                                 <Style>
                                                                                     <Style.Triggers>
                                                                                         <DataTrigger Binding="{Binding IsEnableSafetyMonitorProtocal}" Value="False">
-                                                                                            <Setter Property="Grid.Visibility" Value="Hidden"></Setter>
+                                                                                            <Setter Property="Grid.Visibility" Value="Collapsed"></Setter>
                                                                                         </DataTrigger>
                                                                                     </Style.Triggers>
                                                                                 </Style>
@@ -116,14 +149,16 @@
                                                                                 <ColumnDefinition/>
                                                                             </Grid.ColumnDefinitions>
                                                                             <Label Grid.Row="0" Grid.Column="0"  Content="安全监控系统运行状态:"/>
-                                                                            <Label Grid.Row="0"  Grid.Column="1" Content="{Binding SafetyMonitorRunState,Converter={StaticResource ProtocalRunStateConverter} }"/>
+                                                                            <Label Grid.Row="0"  Grid.Column="1" Content="{Binding SafetyMonitorRunState,Converter={StaticResource ProtocalRunStateConverter} }">
+
+                                                                            </Label>
                                                                         </Grid>
                                                                         <Grid>
                                                                             <Grid.Style>
                                                                                 <Style>
                                                                                     <Style.Triggers>
                                                                                         <DataTrigger Binding="{Binding IsEnableEpipemonitorProtocal}" Value="False">
-                                                                                            <Setter Property="Grid.Visibility" Value="Hidden"></Setter>
+                                                                                            <Setter Property="Grid.Visibility" Value="Collapsed"></Setter>
                                                                                         </DataTrigger>
                                                                                     </Style.Triggers>
                                                                                 </Style>
@@ -143,7 +178,7 @@
                                                                                 <Style>
                                                                                     <Style.Triggers>
                                                                                         <DataTrigger Binding="{Binding IsEnableVideoMonitorProtocal}" Value="False">
-                                                                                            <Setter Property="Grid.Visibility" Value="Hidden"></Setter>
+                                                                                            <Setter Property="Grid.Visibility" Value="Collapsed"></Setter>
                                                                                         </DataTrigger>
                                                                                     </Style.Triggers>
                                                                                 </Style>

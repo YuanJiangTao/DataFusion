@@ -5,6 +5,7 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
@@ -33,6 +34,19 @@ namespace DataFusion.ViewModel
                      MainContent = t.Screen;
                  }
              });
+            Messenger.Default.Register<MenuViewModel>(this, MessageToken.AddMenuItem, t =>
+            {
+                MenuInfoList.Add(t);
+                //TODO:默认回到首页
+            });
+            Messenger.Default.Register<string>(this, MessageToken.RemoveItem, t =>
+            {
+                var menuItem = MenuInfoList.FirstOrDefault(p => p.Header == t);
+                if(menuItem!=null)
+                {
+                    MenuInfoList.Remove(menuItem);
+                }
+            });
             MenuInfoList = _dataService.GetMainItemMenuViewModels();
             LoadPluginMenuItems();
         }
