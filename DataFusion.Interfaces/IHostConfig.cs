@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace DataFusion.Interfaces
 {
-   public interface IHostConfig
+    public interface IHostConfig
     {
+        SystemConfig SystemConfig { get; set; }
 
+        MinePluginConfig MinePluginConfig { get; set; }
     }
 }

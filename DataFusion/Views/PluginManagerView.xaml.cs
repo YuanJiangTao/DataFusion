@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace DataFusion.Views
 {
     /// <summary>
-    /// LeftMainContent.xaml 的交互逻辑
+    /// PluginManagerView.xaml 的交互逻辑
     /// </summary>
-    public partial class LeftMainContent
+    public partial class PluginManagerView : UserControl
     {
-        public LeftMainContent()
+        public PluginManagerView()
         {
             InitializeComponent();
         }

@@ -19,6 +19,9 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight;
 using DataFusion.Interfaces.Utils;
 using DataFusion.Interfaces;
+using MahApps.Metro.Controls;
+using MahApps.Metro.IconPacks;
+using DataFusion.ViewModel.Storages;
 
 namespace DataFusion.ViewModel
 {
@@ -28,18 +31,25 @@ namespace DataFusion.ViewModel
         private readonly TaskScheduler _scheduler;
         public PluginEntryController(IUnityContainer container)
         {
-            Messenger.Default.Register<PluginEntryViewModel>(this, MessageToken.UnloadEntry, Unload);
-            Messenger.Default.Register<PluginEntryViewModel>(this, MessageToken.LoadEntry, Load);
-            Messenger.Default.Register<PluginEntryViewModel>(this, MessageToken.DeleteProtocal, Delete);
-            Messenger.Default.Register<MineProtocalConfigInfo>(this, MessageToken.AddProtocal, Load);
-            
+            MenuItems = new ObservableCollection<HamburgerMenuIconItem>();
+            //MenuItems.Add(new HamburgerMenuIconItem()
+            //{
+            //    Label = "插件状态",
+            //    Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.Home },
+            //    Tag = new Views.PluginStateDisplayView()
+            //});
+
+            Messenger.Default.Register<PluginEntryViewModel>(this, MessageToken.UnloadMinePlugin, UnloadMinePlguin);
+            Messenger.Default.Register<MinePluginConfigModel>(this, MessageToken.LoadMinePlugin, LoadMinePlugin);
+            Messenger.Default.Register<MinePluginConfigInfoViewModel>(this, MessageToken.DeleteMinePlugin, DeleteMinePlugin);
+
 
             PluginEntries = new ObservableCollection<PluginEntrySg>();
-            MineProtocalConfigInfos = new ObservableCollection<MineProtocalConfigInfo>();
+            MineProtocalConfigInfos = new ObservableCollection<MinePluginConfigModel>();
             LoadPluginEntryVms = new ObservableCollection<PluginEntryViewModel>();
             ProtocalInfoModels = new ObservableCollection<ProtocalInfoModel>();
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
-            AppDomain.CurrentDomain.TypeResolve += CurrentDomain_TypeResolve;
+            MinePluginConfigInfoViewModels = new ObservableCollection<MinePluginConfigInfoViewModel>();
+
             _unityContainer = container;
             _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
             try
@@ -48,9 +58,7 @@ namespace DataFusion.ViewModel
                 Test();
 #endif
 
-                ReadMineProtocalInfos();
                 ScanPluginEntries();
-                ReadMineProtocalConfigInfos();
 
             }
             catch (Exception ex)
@@ -59,31 +67,22 @@ namespace DataFusion.ViewModel
             }
         }
 
-        private void Delete(PluginEntryViewModel model)
-        {
-            Unload(model);
-            var protocalConfigInfo = MineProtocalConfigInfos.FirstOrDefault(p => p.MineName == model.MineName && p.MineCode == model.MineCode);
-            if (protocalConfigInfo != null)
-                MineProtocalConfigInfos.Remove(protocalConfigInfo);
-        }
 
-        private void Load(PluginEntryViewModel pluginEditViewModel)
+        /// <summary>
+        /// 删除已经定义的煤矿插件信息，同时要卸载还在运行的插件
+        /// </summary>
+        /// <param name="minePluginConfigInfoVm"></param>
+        private void DeleteMinePlugin(MinePluginConfigInfoViewModel minePluginConfigInfoVm)
         {
-            try
-            {
-                if (pluginEditViewModel != null && pluginEditViewModel.MineProtocalConfigInfo != null)
-                {
-                    Load(pluginEditViewModel.MineProtocalConfigInfo);
-                }
-            }
-            catch (Exception ex)
-            {
-                LogD.Error("加载插件错误:" + ex);
-            }
 
         }
 
-        private void Unload(PluginEntryViewModel pluginEntryViewModel)
+
+        /// <summary>
+        /// 卸载插件
+        /// </summary>
+        /// <param name="pluginEntryViewModel"></param>
+        private void UnloadMinePlguin(PluginEntryViewModel pluginEntryViewModel)
         {
             try
             {
@@ -95,56 +94,43 @@ namespace DataFusion.ViewModel
                 LogD.Error("卸载插件错误:" + ex);
             }
         }
-        private async void Load(MineProtocalConfigInfo mineProtocalConfigInfo)
+        /// <summary>
+        /// 添加煤矿插件信息，同时运行插件
+        /// </summary>
+        /// <param name="mineProtocalConfigInfo"></param>
+        private async void LoadMinePlugin(MinePluginConfigModel mineProtocalConfigInfo)
         {
             var menuItem = await LoadPluginEntryAsync(mineProtocalConfigInfo);
-            Messenger.Default.Send<MenuViewModel>(menuItem, MessageToken.AddMenuItem);
+            if (menuItem != null)
+            {
+                MenuItems.Add(menuItem);
+            }
         }
 
 
         private void Test()
         {
-            MineProtocalConfigInfo configInfo = new MineProtocalConfigInfo()
+            MinePluginConfigModel configInfo = new MinePluginConfigModel()
             {
                 MineName = "车集矿",
                 MineCode = "0123456789",
-                IsEnableEpipemonitorProtocal = false,
-                IsEnableSafetyMonitorProtocal = false,
-                IsEnableVideoMonitorProtocal = false,
-                EpipemonitorRunState = 1,
-                SafetyMonitorRunState = 1,
-                VideoMonitorRunState = 1,
-                State = 1
+                IsEnable = true
             };
             MineProtocalConfigInfos.Add(configInfo);
         }
 
-        private Assembly CurrentDomain_TypeResolve(object sender, ResolveEventArgs args)
-        {
-            LogD.Info($"类型{args.Name}动态生成失败...");
-            return null;
-        }
 
-        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
-        {
-            AssemblyName name = new AssemblyName(args.Name);
-            var matchPattern = @"^\w*Plugin\z";
-            if (Regex.IsMatch(args.Name, matchPattern))
-            {
-                var path = AppDomain.CurrentDomain.BaseDirectory + "Plugins";
-                return Assembly.LoadFrom(PathUtils.Combine(path, name.Name + ".dll"));
-            }
-            LogD.Info($"程序集{args.Name}加载失败...");
-            return null;
-        }
 
-        public ObservableCollection<MineProtocalConfigInfo> MineProtocalConfigInfos { get; private set; }
+        public ObservableCollection<HamburgerMenuIconItem> MenuItems { get; set; }
+
+        public ObservableCollection<MinePluginConfigModel> MineProtocalConfigInfos { get; private set; }
 
         public ObservableCollection<PluginEntrySg> PluginEntries { get; private set; }
 
         public ObservableCollection<PluginEntryViewModel> LoadPluginEntryVms { get; set; }
 
-        public ObservableCollection<ProtocalInfoModel> ProtocalInfoModels { get; set; }
+        public ObservableCollection<MinePluginConfigInfoViewModel> MinePluginConfigInfoViewModels { get; set; }
+
 
         private void ScanPluginEntries()
         {
@@ -167,8 +153,6 @@ namespace DataFusion.ViewModel
                 var fileName = fvi.OriginalFilename;
                 var company = fvi.CompanyName;
                 var comments = fvi.Comments;
-                var templateElement = GetFrameworkFromAssembly(Path.GetFileNameWithoutExtension(dir));
-
                 var pluginEntrySg = new PluginEntrySg()
                 {
                     Title = title,
@@ -179,11 +163,104 @@ namespace DataFusion.ViewModel
                     Company = company,
                     ProductName = product,
                     BuildTime = buildTime,
-                    TemplateElement = templateElement
                 };
                 PluginEntries.Add(pluginEntrySg);
+                AddAvaiablePluginEntry(pluginEntrySg);
             }
         }
+
+
+        private void AddAvaiablePluginEntry(PluginEntrySg o)
+        {
+            var m = new PluginEntryViewModel(o);
+            LoadPluginEntryVms.Add(m);
+        }
+
+
+      
+        public async Task<HamburgerMenuIconItem> LoadPluginEntryAsync(MinePluginConfigModel mineProtocalConfigInfo)
+        {
+            var pluginEntrySg = PluginEntries.FirstOrDefault(p => p.Title == mineProtocalConfigInfo.PluginEntrySg.Title && p.Version == mineProtocalConfigInfo.PluginEntrySg.Version);
+            if (pluginEntrySg != null)
+            {
+                return await Task.Run(() => LoadPluginEntry(pluginEntrySg, mineProtocalConfigInfo)).ContinueWith(t =>
+                {
+                    var pluginEntry = t.Result;
+                    pluginEntry.CreateView();
+                    //AddAvaiablePluginEntry(pluginEntrySg, mineProtocalConfigInfo);
+                    return new HamburgerMenuIconItem()
+                    {
+                        Label = mineProtocalConfigInfo.MineName,
+                        Tag = pluginEntry.View,
+                        Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.Home }
+                    };
+                }, _scheduler);
+            }
+            return null;
+        }
+        public PluginEntry LoadPluginEntry(PluginEntrySg pluginEntrySg, MinePluginConfigModel mineProtocalConfigInfo)
+        {
+            var pluginEntry = _unityContainer.Resolve<PluginEntry>();
+            pluginEntry.Error += PluginEntry_Error;
+            try
+            {
+                pluginEntry.Load(pluginEntrySg, mineProtocalConfigInfo);
+            }
+            catch (Exception ex)
+            {
+                DisposePlugin(pluginEntry);
+            }
+            return pluginEntry;
+        }
+        private void DisposePlugin(PluginEntry pluginEntry)
+        {
+            if (pluginEntry == null) return;
+            pluginEntry.Error -= PluginEntry_Error;
+
+            try
+            {
+                pluginEntry.Dispose();
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        private void PluginEntry_Error(object sender, PluginErrorEventArgs e)
+        {
+            var task = new Task(() => PluginErrorHandler(e));
+            task.Start(_scheduler);
+        }
+        private void PluginErrorHandler(PluginErrorEventArgs args)
+        {
+
+        }
+
+        private DateTime GetLinkerTime(string filePath, TimeZoneInfo target = null)
+        {
+            return File.GetLastWriteTime(filePath);
+        }
+
+        public override void Cleanup()
+        {
+            try
+            {
+                base.Cleanup();
+
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
+
+        #region --弃用--
+
+
+        public ObservableCollection<ProtocalInfoModel> ProtocalInfoModels { get; set; }
+
+
         private void ReadMineProtocalInfos()
         {
             var protocalsFolder = PathUtils.Combine(Constant.ProtocalFolder);
@@ -221,76 +298,23 @@ namespace DataFusion.ViewModel
                 //}
             }
         }
-        public async Task<IList<MenuViewModel>> LoadPluginEntiesAsync()
+        private Assembly CurrentDomain_TypeResolve(object sender, ResolveEventArgs args)
         {
-            var menuItemList = new List<MenuViewModel>();
-            var tasks = MineProtocalConfigInfos.Select(p => LoadPluginEntryAsync(p));
-            var result = await Task.WhenAll(tasks);
-            return result;
-            //foreach (var item in MineProtocalConfigInfos)
-            //{
-            //    var subMenuItem = await LoadPluginEntryAsync(item);
-            //    if (subMenuItem != null)
-            //        menuItemList.Add(subMenuItem);
-
-            //}
-        }
-        public async Task<MenuViewModel> LoadPluginEntryAsync(MineProtocalConfigInfo mineProtocalConfigInfo)
-        {
-            var pluginEntrySg = PluginEntries.FirstOrDefault(p => p.Title == mineProtocalConfigInfo.PluginTitle && p.Version == mineProtocalConfigInfo.PluginVersion);
-            if (pluginEntrySg != null)
-            {
-                return await Task.Run(() => LoadPluginEntry(pluginEntrySg, mineProtocalConfigInfo)).ContinueWith(t =>
-                {
-                    var pluginEntry = t.Result;
-                    pluginEntry.CreateView();
-                    AddAvaiablePluginEntry(pluginEntrySg, mineProtocalConfigInfo);
-                    return new MenuViewModel() { Header = mineProtocalConfigInfo.MineName, Screen = pluginEntry.View };
-                }, _scheduler);
-            }
+            LogD.Info($"类型{args.Name}动态生成失败...");
             return null;
         }
-        public PluginEntry LoadPluginEntry(PluginEntrySg pluginEntrySg, MineProtocalConfigInfo mineProtocalConfigInfo)
-        {
-            var pluginEntry = _unityContainer.Resolve<PluginEntry>();
-            pluginEntry.Error += PluginEntry_Error;
-            try
-            {
-                pluginEntry.Load(pluginEntrySg, mineProtocalConfigInfo);
-            }
-            catch (Exception ex)
-            {
-                DisposePlugin(pluginEntry);
-            }
-            return pluginEntry;
-        }
-        private void DisposePlugin(PluginEntry pluginEntry)
-        {
-            if (pluginEntry == null) return;
-            pluginEntry.Error -= PluginEntry_Error;
 
-            try
+        private Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            AssemblyName name = new AssemblyName(args.Name);
+            var matchPattern = @"^\w*Plugin\z";
+            if (Regex.IsMatch(args.Name, matchPattern))
             {
-                pluginEntry.Dispose();
+                var path = AppDomain.CurrentDomain.BaseDirectory + "Plugins";
+                return Assembly.LoadFrom(PathUtils.Combine(path, name.Name + ".dll"));
             }
-            catch (Exception ex)
-            {
-
-            }
-        }
-        private void PluginEntry_Error(object sender, PluginErrorEventArgs e)
-        {
-            var task = new Task(() => PluginErrorHandler(e));
-            task.Start(_scheduler);
-        }
-        private void PluginErrorHandler(PluginErrorEventArgs args)
-        {
-
-        }
-        public void AddAvaiablePluginEntry(PluginEntrySg pluginEntrySg, MineProtocalConfigInfo mineProtocalConfigInfo)
-        {
-            var pluginEntryVm = new PluginEntryViewModel(pluginEntrySg, mineProtocalConfigInfo, false);
-            LoadPluginEntryVms.Add(pluginEntryVm);
+            LogD.Info($"程序集{args.Name}加载失败...");
+            return null;
         }
 
         private void ScanProtocals()
@@ -319,10 +343,8 @@ namespace DataFusion.ViewModel
             return null;
 
         }
-        private DateTime GetLinkerTime(string filePath, TimeZoneInfo target = null)
-        {
-            return File.GetLastWriteTime(filePath);
-        }
+        #endregion
+
 
     }
 }

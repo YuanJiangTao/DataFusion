@@ -68,9 +68,9 @@
     <Compile Include="IPluginHost.cs" />
     <Compile Include="LogDog.cs" />
     <Compile Include="LogDogCollar.cs" />
-    <Compile Include="MineProtocalConfigInfo.cs" />
+    <Compile Include="MinePluginConfig.cs" />
     <Compile Include="PluginStartupInfo.cs" />
-    <Compile Include="SystemConfigInfo.cs" />
+    <Compile Include="SystemConfig.cs" />
     <Compile Include="Utils\CultureInfoHelper.cs" />
     <Compile Include="Utils\MD5Util.cs" />
     <Compile Include="Utils\PathUtils.cs" />

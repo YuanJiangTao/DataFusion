@@ -3,119 +3,117 @@ using DataFusion.Services;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.IconPacks;
 using System;
+using System.CodeDom;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace DataFusion.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
         private DataService _dataService;
-        private MessageService _messageService;
         private PluginEntryController _pluginEntryController;
 
-        public MainViewModel(DataService dataService, PluginEntryController pluginEntryController, MessageService messageService)
+
+        public MainViewModel(DataService dataService, PluginEntryController pluginEntryController)
         {
+            Dialog = DialogCoordinator.Instance;
             _dataService = dataService;
-            _messageService = messageService;
             _pluginEntryController = pluginEntryController;
-            Messenger.Default.Register<MenuViewModel>(this, MessageToken.LoadShowContent, t =>
-             {
-                 if (t != null)
-                 {
-                     if (MainContent is IDisposable dispose)
-                     {
-                         dispose.Dispose();
-                     }
-                     ContentTitle = t.Header;
-                     MainContent = t.Screen;
-                 }
-             });
-            Messenger.Default.Register<MenuViewModel>(this, MessageToken.AddMenuItem, t =>
-            {
-                MenuInfoList.Add(t);
-                //TODO:默认回到首页
-            });
-            Messenger.Default.Register<string>(this, MessageToken.RemoveItem, t =>
-            {
-                var menuItem = MenuInfoList.FirstOrDefault(p => p.Header == t);
-                if(menuItem!=null)
-                {
-                    MenuInfoList.Remove(menuItem);
-                }
-            });
-            MenuInfoList = _dataService.GetMainItemMenuViewModels();
-            LoadPluginMenuItems();
+            MenuItems = new ObservableCollection<HamburgerMenuItem>();
+            OptionsMenuItems = new ObservableCollection<HamburgerMenuIconItem>();
+            LoadCommand = new Lazy<RelayCommand>(() => new RelayCommand(Load)).Value;
         }
 
-        private async void LoadPluginMenuItems()
-        {
-            var pluginMenuItem = await _pluginEntryController.LoadPluginEntiesAsync();
-            foreach (var subMenuItem in pluginMenuItem)
-            {
-                MenuInfoList.Add(subMenuItem);
-            }
-        }
+
 
         public string SystemTitle => "数据融合";
 
-        public RelayCommand LoadCommand => new RelayCommand(Load);
-        //new Lazy<RelayCommand>(() =>
-        //new RelayCommand(Load)).Value;
+        public ICommand LoadCommand { get; set; }
 
-        private void Load()
+        public IDialogCoordinator Dialog { get; }
+
+        private async void Load()
         {
-
+            OptionsMenuItems.Add(new HamburgerMenuIconItem()
+            {
+                Label = "插件管理",
+                Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.SettingsHelper },
+                Tag = new Views.PluginManagerView()
+            });
+            _dispatcherTimer = new DispatcherTimer();
+            _dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            _dispatcherTimer.Start();
+            await Task.Delay(100);
         }
 
-
-
-
-
-        /// <summary>
-        /// 切换例子的命令
-        /// </summary>
-        public RelayCommand<SelectionChangedEventArgs> SwitchCommand =>
-            new Lazy<RelayCommand<SelectionChangedEventArgs>>(() =>
-            new RelayCommand<SelectionChangedEventArgs>(SwitchDemo)).Value;
-
-        private MenuViewModel _currentMenuItem;
-
-        private void SwitchDemo(SelectionChangedEventArgs e)
+        private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
-            _messageService.Warnging("开始载入...");
-            if (e.AddedItems.Count == 0) return;
-            if ((e.Source as Selector).SelectedItem is MenuViewModel source)
+            DateTimeNow = DateTime.Now;
+        }
+
+        private DispatcherTimer _dispatcherTimer;
+
+        private DateTime _dateTimeNow;
+        public DateTime DateTimeNow
+        {
+            get => _dateTimeNow;
+
+            set
             {
-                if (Equals(_currentMenuItem, source)) return;
-                _currentMenuItem = source;
-                Messenger.Default.Send<MenuViewModel>(source, MessageToken.LoadShowContent);
+                _dateTimeNow = value;
+                RaisePropertyChanged();
             }
         }
-
-
-        private ObservableCollection<MenuViewModel> _mainItemMenuViews = new ObservableCollection<MenuViewModel>();
-
-        public ObservableCollection<MenuViewModel> MenuInfoList
+        public RelayCommand<CancelEventArgs> CloseCommand => new Lazy<RelayCommand<CancelEventArgs>>(() =>
+        new RelayCommand<CancelEventArgs>(async e =>
         {
-            get => _mainItemMenuViews;
-            set => Set(ref _mainItemMenuViews, value);
-        }
-        private string _contentTitle;
-        public string ContentTitle
-        {
-            get => _contentTitle;
-            set => Set(ref _contentTitle, value);
-        }
+            try
+            {
+                e.Cancel = true;
+                var mySettings = new MetroDialogSettings
+                {
+                    AffirmativeButtonText = "确定",
+                    NegativeButtonText = "取消",
+                    AnimateShow = true,
+                    AnimateHide = false
+                };
+                var result = await Dialog.ShowMessageAsync(this, "提示",
+                                             "要退出程序吗?",
+                                             MessageDialogStyle.AffirmativeAndNegative, mySettings);
+                if (result == MessageDialogResult.Affirmative)
+                {
+                    e.Cancel = false;
+                    Application.Current.Shutdown();
+                }
+                else
+                    e.Cancel = true;
+            }
+            catch (Exception ex)
+            {
 
-        private object _mainContent;
-        public object MainContent
-        {
-            get => _mainContent;
-            set => Set(ref _mainContent, value);
-        }
+                throw ex;
+            }
+
+        })).Value;
+
+
+        public ObservableCollection<HamburgerMenuItem> MenuItems { get; set; }
+
+        public ObservableCollection<HamburgerMenuIconItem> OptionsMenuItems { get; set; }
+
+
     }
 }

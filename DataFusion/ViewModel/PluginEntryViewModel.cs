@@ -10,129 +10,86 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using DataFusion.Data;
-using HcMessageBox = HandyControl.Controls.MessageBox;
-using HandyControl.Data;
 using System.Windows;
-using HandyControl.Controls;
 using DataFusion.Views;
-using HandyControl.Tools.Extension;
+using MahApps.Metro.Controls.Dialogs;
+using DataFusion.ViewModel.Storages;
 
 namespace DataFusion.ViewModel
 {
     public class PluginEntryViewModel : ViewModelBase
     {
-        private MineProtocalConfigInfo _configInfo;
-        private PluginEntrySg _entrySg;
-
         public PluginEntryViewModel()
         {
         }
-        private bool _isExample;
-        public PluginEntryViewModel(bool isExample):this()
+        public PluginEntryViewModel(PluginEntrySg pluginEntrySg)
         {
-            _isExample = isExample;
-        }
-        public PluginEntryViewModel(PluginEntrySg pluginEntrySg, MineProtocalConfigInfo mineProtocalConfigInfo,bool isExample):this(isExample)
-        {
-            _entrySg = pluginEntrySg;
-            _configInfo = mineProtocalConfigInfo;
-            UnloadCommand = new Lazy<RelayCommand>(() => new RelayCommand(Unload)).Value;
+            PluginEntrySg = pluginEntrySg;
             LoadCommand = new Lazy<RelayCommand>(() => new RelayCommand(Load)).Value;
-            DeleteCommand = new Lazy<RelayCommand>(() => new RelayCommand(Delete)).Value;
+            UninstallCommand = new Lazy<RelayCommand>(() => new RelayCommand(UninstallPlugin)).Value;
         }
 
 
-        private async void Delete()
+        private async void UninstallPlugin()
         {
-            var dialogResult = HcMessageBox.Show(new MessageBoxInfo()
-            {
-                Message = "你确定要删除吗?",
-                Caption = "提示",
-                Button = MessageBoxButton.OKCancel,
-                IconBrushKey = ResourceToken.AccentBrush,
-                IconKey = ResourceToken.AskGeometry,
-                StyleKey = "MessageBoxCustom"
-            });
-            if (dialogResult == MessageBoxResult.Cancel)
+            var result = await MetroDialog.StaticShowMessageAsync("提示", "正在卸载当前模块.卸载后无法恢复, 请确定!", MahApps.Metro.Controls.Dialogs.MessageDialogStyle.AffirmativeAndNegative);
+
+            if (result == MahApps.Metro.Controls.Dialogs.MessageDialogResult.Negative)
                 return;
-            else if(dialogResult== MessageBoxResult.OK)
+            try
             {
-                var pwdResult = await Dialog.Show<PasswordDiaglogView>()
-                .Initialize<PasswordDiaglogViewModel>(vm => vm.Message = "请输入密码")
-                .GetResultAsync<string>();
-                if (!string.IsNullOrEmpty(pwdResult))
-                {
-                    Messenger.Default.Send<PluginEntryViewModel>(this, MessageToken.DeleteProtocal);
-                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
             }
         }
 
-
-        private void Load()
+        private async void Load()
         {
-            Messenger.Default.Send<PluginEntryViewModel>(this, MessageToken.LoadEntry);
+            var vm = await MetroDialog.ShowCustomDialog<PluginAddViewModel, PluginAddUserControl>("新增插件", action => new PluginAddViewModel(action));
+            if (vm.DialogResult)
+            {
+                var mineConfigInfo = new MinePluginConfigModel()
+                {
+                    Id = Guid.NewGuid(),
+                    MineCode = vm.MineCode,
+                    MineName = vm.MineName,
+                    CreatTime = DateTime.Now,
+                    IsEnable = true,
+                    PluginEntrySg = PluginEntrySg
+                };
+                Messenger.Default.Send<MinePluginConfigModel>(mineConfigInfo, MessageToken.LoadMinePlugin);
+            }
         }
         private void Unload()
         {
-            Messenger.Default.Send<PluginEntryViewModel>(this, MessageToken.UnloadEntry);
+            Messenger.Default.Send<PluginEntryViewModel>(this, MessageToken.UnloadMinePlugin);
         }
 
-        public MineProtocalConfigInfo MineProtocalConfigInfo => _configInfo;
-        public PluginEntrySg PluginEntrySg => _entrySg;
-
-        public string MineName => _configInfo.MineName;
-        public string MineCode => _configInfo.MineCode;
-
-        public string PluginTitle => _entrySg.Title;
-        public string PluginDescription => _entrySg.Description;
-        public string PluginVersion => _entrySg.Version;
-        public DateTime CreateTime => _configInfo.CreatTime;
-        public int Bits => _entrySg.Bits;
-
-        public bool IsDebug => _entrySg.IsDebug;
-
-        public bool IsExample
-        {
-            get => _isExample;
-            set
-            {
-                _isExample = value;
-                RaisePropertyChanged();
-            }
-        }
+        public PluginEntrySg PluginEntrySg { get; }
 
 
-        public bool IsEnable
-        {
-            get => _configInfo.IsEnable;
-            set
-            {
-                _configInfo.IsEnable = value;
-                RaisePropertyChanged();
-                if(_configInfo.IsEnable)
-                {
-                    //启用
-                    Load();
-                }
-                else
-                {
-                    //卸载
-                    Unload();
-                }
-            }
-        }
+        public string PluginTitle => PluginEntrySg.Title;
+        public string PluginDescription => PluginEntrySg.Description;
+        public string PluginVersion => PluginEntrySg.Version;
+        public int Bits => PluginEntrySg.Bits;
 
+        public bool IsDebug => PluginEntrySg.IsDebug;
 
-        public ICommand DeleteCommand { get; set; }
 
         public ICommand LoadCommand { get; set; }
-        public ICommand UnloadCommand { get; set; }
         public ICommand UninstallCommand { get; set; }
-        public ICommand InstallCommand { get; set; }
 
 
-
-        
 
 
     }

@@ -16,28 +16,13 @@ using System.Windows.Shapes;
 namespace DataFusion.Views
 {
     /// <summary>
-    /// NoUserContentView.xaml 的交互逻辑
+    /// PluginAddUc.xaml 的交互逻辑
     /// </summary>
-    public partial class NoUserContentView 
+    public partial class PluginAddUserControl : UserControl
     {
-        public NoUserContentView()
+        public PluginAddUserControl()
         {
             InitializeComponent();
-        }
-
-        private void ButtonConfig_Click(object sender, RoutedEventArgs e)
-        {
-            this.PopupConfig.IsOpen = true;
-        }
-
-        private void StackPanel_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void ButtonSetting_Click(object sender, RoutedEventArgs e)
-        {
-            //this.PopupSetting.IsOpen = true;
         }
     }
 }

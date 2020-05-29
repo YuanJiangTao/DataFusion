@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace DataFusion.Interfaces
 {
-    [Serializable]
-    public class SystemConfigInfo
+    public class SystemConfig : MarshalByRefObject
     {
-        public SystemConfigInfo()
-        {
-
-        }
         public string RedisServer { get; set; }
+
         public string RedisPwd { get; set; }
+        public override string ToString()
+        {
+            return $"RedisServe:{RedisServer}\tRedisPwd:{RedisPwd}";
+        }
     }
 }

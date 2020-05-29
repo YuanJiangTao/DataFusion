@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace DataFusion.ViewModel.Storages
 {
-    class SystemConfigInfoSg
+    public class SystemConfigInfoSg
     {
+
     }
 }

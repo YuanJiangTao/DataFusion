@@ -8,19 +8,9 @@ namespace DataFusion.Interfaces
 {
     public class HostConfig : MarshalByRefObject, IHostConfig
     {
-        public RedisConfig RedisConfig { get; set; }
+        public SystemConfig SystemConfig { get; set; }
 
-        public ProtocalConfig ProtocalConfig { get; set; }
-    }
-
-
-    public class RedisConfig : MarshalByRefObject
-    {
-        public string ServerIp { get; set; }
-
-        public int ServerPort { get; set; }
-
-        public override string ToString() => $"ServerIp:{ServerIp}\tServerPort:{ServerPort}";
+        public MinePluginConfig MinePluginConfig { get; set; }
     }
 
     public class ProtocalConfig : MarshalByRefObject

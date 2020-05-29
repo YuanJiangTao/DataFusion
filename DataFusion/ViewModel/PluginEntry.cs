@@ -11,6 +11,7 @@ using Unity.Lifetime;
 using System.IO;
 using System.AddIn.Pipeline;
 using DataFusion.PluginHosting;
+using DataFusion.ViewModel.Storages;
 
 namespace DataFusion.ViewModel
 {
@@ -19,7 +20,7 @@ namespace DataFusion.ViewModel
         private IUnityContainer _childContainer;
 
 
-        public MineProtocalConfigInfo MineProtocalConfig { get; private set; }
+        public MinePluginConfigModel MineProtocalConfig { get; private set; }
 
         public PluginEntrySg PluginEntrySg { get; private set; }
 
@@ -33,11 +34,12 @@ namespace DataFusion.ViewModel
         {
             _childContainer = container.CreateChildContainer();
         }
-        internal void Load(PluginEntrySg pluginEntrySg, MineProtocalConfigInfo mineProtocalConfigInfo)
+        internal void Load(PluginEntrySg pluginEntrySg, MinePluginConfigModel mineProtocalConfigInfo)
         {
             if (PluginEntrySg != null) throw new InvalidOperationException("Plugin can be loaded only once");
             PluginEntrySg = pluginEntrySg;
             MineProtocalConfig = mineProtocalConfigInfo;
+
 
             Initialize();
 
@@ -94,9 +96,13 @@ namespace DataFusion.ViewModel
         }
         private void Initialize()
         {
+            var hostConfig = new HostConfig();
+            hostConfig.MinePluginConfig = MineProtocalConfig.ToMinePluginConfig();
+            hostConfig.SystemConfig = _childContainer.Resolve<SystemConfigViewModel>().SystemConfigModel.ToSystemConfig();
+            _childContainer.RegisterInstance<IHostConfig>(hostConfig, new ContainerControlledLifetimeManager());
             _childContainer.RegisterType<IPluginHost, PluginViewOfHost>(new ContainerControlledLifetimeManager());
             _childContainer.RegisterType<PluginProcessProxy>(new ContainerControlledLifetimeManager());
-            _childContainer.RegisterInstance<MineProtocalConfigInfo>(MineProtocalConfig, new ContainerControlledLifetimeManager());
+            _childContainer.RegisterInstance<MinePluginConfigModel>(MineProtocalConfig, new ContainerControlledLifetimeManager());
             _startupInfo = new PluginStartupInfo()
             {
                 AssemblyPath = PluginEntrySg.AssemblyPath,

@@ -10,7 +10,6 @@ using DataFusion.Model;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using MaterialDesignThemes.Wpf;
 using DataFusion.Data;
 using System.Windows.Controls.Primitives;
 
@@ -57,13 +56,13 @@ namespace DataFusion.ViewModel
             get => _header;
             set => Set(ref _header, value);
         }
-        private PackIconKind _icon;
+        //private PackIconKind _icon;
 
-        public PackIconKind Icon
-        {
-            get => _icon;
-            set => Set(ref _icon, value);
-        }
+        //public PackIconKind Icon
+        //{
+        //    get => _icon;
+        //    set => Set(ref _icon, value);
+        //}
         private ObservableCollection<SubMenuItem> _subItems;
         public ObservableCollection<SubMenuItem> SubItems
         {

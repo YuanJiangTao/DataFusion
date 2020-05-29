@@ -9,20 +9,19 @@ using Unity;
 using DataFusion.Services;
 using System.Collections.ObjectModel;
 using DataFusion.Interfaces;
+using DataFusion.Model;
 
 namespace DataFusion.ViewModel
 {
     public class PluginStateDisplayViewModel:ViewModelBase
     {
         private PluginEntryController _controller;
-        private MessageService _service;
-        public PluginStateDisplayViewModel(PluginEntryController controller,MessageService service)
+        public PluginStateDisplayViewModel(PluginEntryController controller)
         {
             _controller = controller;
-            _service = service;
         }
 
-        public ObservableCollection<MineProtocalConfigInfo> MineProtocalConfigInfos
+        public ObservableCollection<MinePluginConfigModel> MineProtocalConfigInfos
         {
             get => _controller.MineProtocalConfigInfos;
         }

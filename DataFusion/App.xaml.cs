@@ -47,7 +47,7 @@ namespace DataFusion
 
         private System.Reflection.Assembly CurrentDomain_AssemblyResolve(object sender, ResolveEventArgs args)
         {
-            //_log.Info($"无法加载:{args.Name}");
+            _log?.Info($"无法加载:{args.Name}");
             return null;
         }
 
@@ -57,7 +57,6 @@ namespace DataFusion
             if (!createdNew)
             {
                 var current = Process.GetCurrentProcess();
-
                 foreach (var process in Process.GetProcessesByName(current.ProcessName))
                 {
                     if (process.Id != current.Id)
@@ -70,8 +69,6 @@ namespace DataFusion
             }
             else
             {
-
-
                 CultureInfoHelper.SetDateTimeFormat();
                 var locator = (ViewModelLocator)this.Resources["Locator"];
                 container = new UnityContainer();
@@ -82,17 +79,13 @@ namespace DataFusion
                 locator.IniContainer(container);
                 base.OnStartup(e);
             }
-
         }
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
             _mainWindow = container.Resolve<MainWindow>();
             _mainWindow.InitializeComponent();
-
-            //LogD.Initializer(_log);
             _log.Info($"Hello {Constant.ClietnName}.");
-
             await Task.Delay(500);
             Current.MainWindow = _mainWindow;
             _mainWindow.Show();
@@ -105,10 +98,10 @@ namespace DataFusion
             var logDogCollar = container.Resolve<ILogDogCollar>(Constant.ClietnName);
             logDogCollar.Setup(Constant.ClietnName, Constant.ClietnName);
             _log = logDogCollar.GetLogger();
+            LogD.Initializer(_log);
             container.RegisterInstance<ILogDog>(Constant.ClietnName, _log, Singleton());
             container.RegisterType<DataService>(Singleton());
             container.RegisterType<PluginEntryController>(Singleton());
-            container.RegisterType<MessageService>(Singleton());
         }
         private static ContainerControlledLifetimeManager Singleton()
         {

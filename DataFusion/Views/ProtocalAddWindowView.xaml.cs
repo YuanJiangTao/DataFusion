@@ -17,7 +17,7 @@ namespace DataFusion.Views
     /// <summary>
     /// ProtocalAddWindowView.xaml 的交互逻辑
     /// </summary>
-    public partial class ProtocalAddWindowView :HandyControl.Controls.BlurWindow
+    public partial class ProtocalAddWindowView //:HandyControl.Controls.BlurWindow
     {
         public ProtocalAddWindowView()
         {

@@ -7,9 +7,9 @@ using GalaSoft.MvvmLight;
 using System.Windows;
 using Newtonsoft.Json;
 
-namespace DataFusion.Model
+namespace DataFusion.ViewModel.Storages
 {
-    public class PluginEntrySg 
+    public class PluginEntrySg
     {
 
         public PluginEntrySg()
@@ -40,11 +40,6 @@ namespace DataFusion.Model
         public DateTime BuildTime { get; set; }
 
         public bool Available { get; set; }
-        /// <summary>
-        /// 插件模板
-        /// </summary>
-        [JsonIgnore]
-        public FrameworkElement TemplateElement { get; set; }
 
     }
 }

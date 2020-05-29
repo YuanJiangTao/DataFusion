@@ -1,0 +1,54 @@
+﻿<UserControl x:Class="DataFusion.Views.PluginAddUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DataFusion.Views"
+             mc:Ignorable="d" 
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Thickness x:Key="ColumnMargin">0 5 10 0</Thickness>
+        <Thickness x:Key="ControlMargin">0 5 0 0</Thickness>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Grid.Column="0" x:Name="lbMineName" Margin="{StaticResource ColumnMargin}" Content="煤矿名称" />
+
+        <TextBox  Margin="{StaticResource ColumnMargin}" Grid.Column="1" Grid.Row="0"
+                         HorizontalContentAlignment="Stretch"
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Controls:TextBoxHelper.IsWaitingForData="True"
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Controls:TextBoxHelper.Watermark="{Binding ElementName=lbMineName,Path=Content}"
+                         Controls:TextBoxHelper.WatermarkAlignment="Left"
+                         SpellCheck.IsEnabled="True" Text="{Binding MineName}"
+                         ToolTip="Default alignment">
+        </TextBox>
+        <Label Grid.Row="1" Grid.Column="0" x:Name="lbMineCode" Margin="{StaticResource ColumnMargin}" Content="煤矿编码" />
+
+        <TextBox  Margin="{StaticResource ColumnMargin}" Grid.Column="1" Grid.Row="1"
+                         HorizontalContentAlignment="Stretch"
+                         Controls:TextBoxHelper.ClearTextButton="True"
+                         Controls:TextBoxHelper.IsWaitingForData="True"
+                         Controls:TextBoxHelper.UseFloatingWatermark="True"
+                         Controls:TextBoxHelper.Watermark="{Binding ElementName=lbMineCode,Path=Content}"
+                         Controls:TextBoxHelper.WatermarkAlignment="Left"
+                         SpellCheck.IsEnabled="True" Text="{Binding MineCode}"
+                         ToolTip="Default alignment">
+        </TextBox>
+        <StackPanel Margin="0,40,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"  Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button  Content="确 定" Width="120"  Height="30" Margin="0,0,140,0" Style="{StaticResource MahApps.Styles.Button.Square}"  Command="{Binding CloseCommand}" HorizontalAlignment="Right" >
+            </Button>
+            <Button   Content="返 回" Width="120" Height="30" HorizontalAlignment="Right" Style="{StaticResource MahApps.Styles.Button.Square}" Command="{Binding CancelCommand}"></Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

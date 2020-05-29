@@ -23,13 +23,11 @@ namespace DataFusion.ViewModel
 
         private PluginEntryController _controller;
 
-        private MineProtocalConfigInfo _configInfo;
-        private MessageService _message;
-        public ProtocalAddWindowViewModel(PluginEntryController controller, MessageService message)
+        private MinePluginConfigInfo _configInfo;
+        public ProtocalAddWindowViewModel(PluginEntryController controller)
         {
             _controller = controller;
-            _configInfo = new MineProtocalConfigInfo();
-            _message = message;
+            _configInfo = new MinePluginConfigInfo();
             _selectedProtocalInfoModels = new ObservableCollection<ProtocalInfoModel>();
         }
 
@@ -120,7 +118,6 @@ namespace DataFusion.ViewModel
           {
               if (_selectedPluginEntrySg == null)
               {
-                  _message.Warnging("必须选择插件模板");
                   return;
               }
               _configInfo.PluginTitle = _selectedPluginEntrySg.Title;
@@ -132,18 +129,18 @@ namespace DataFusion.ViewModel
             () => new RelayCommand<SelectionChangedEventArgs>(
                 e =>
               {
-                  var transfer = e.OriginalSource as HandyControl.Controls.Transfer;
-                  if (transfer != null && transfer.SelectedItems != null)
-                  {
-                      var selectedItems = transfer.SelectedItems.Cast<ProtocalInfoModel>().ToList();
-                      foreach (var item in selectedItems)
-                      {
-                          if (item.ProtocalName == "")
-                          {
+                  //var transfer = e.OriginalSource as HandyControl.Controls.Transfer;
+                  //if (transfer != null && transfer.SelectedItems != null)
+                  //{
+                  //    var selectedItems = transfer.SelectedItems.Cast<ProtocalInfoModel>().ToList();
+                  //    foreach (var item in selectedItems)
+                  //    {
+                  //        if (item.ProtocalName == "")
+                  //        {
 
-                          }
-                      }
-                  }
+                  //        }
+                  //    }
+                  //}
 
               })).Value;
 

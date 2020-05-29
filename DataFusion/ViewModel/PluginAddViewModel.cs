@@ -1,54 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
-using GalaSoft.MvvmLight;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
+using System.Windows.Input;
 using DataFusion.Interfaces;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 
-namespace DataFusion.Model
+namespace DataFusion.ViewModel
 {
-    [Serializable]
-    [MetadataType(typeof(SystemConfigSg))]
-    public class SystemConfigSg : ObservableObject, IDataErrorInfo
+    [MetadataType(typeof(PluginAddViewModel))]
+    public class PluginAddViewModel : ViewModelBase, IDataErrorInfo
     {
-        public SystemConfigSg()
+
+        public PluginAddViewModel(Action<object> closeHandler)
         {
+            CloseCommand = new RelayCommand(() =>
+            {
+                DialogResult = true;
+                closeHandler(this);
+            }, CanSave);
 
-
+            CancelCommand = new RelayCommand(() =>
+            {
+                DialogResult = false;
+                closeHandler(this);
+            });
         }
-        private string _redisServer = "127.0.0.1";
-        private string _redisPwd = "gl";
-        [Required(ErrorMessage = "Redis服务器不能为空")]
-        public string RedisServer
+
+        private string _mineName { get; set; }
+        [Required(ErrorMessage = "煤矿名称不能为空")]
+        public string MineName
         {
-            get => _redisServer;
+            get => _mineName;
             set
             {
-                Set(ref _redisServer, value);
+                _mineName = value;
+                RaisePropertyChanged();
             }
         }
-        [Required(ErrorMessage = "Redis密码不能为空")]
-        public string RedisPwd
+        private string _mineCode;
+        [Required(ErrorMessage = "煤矿编号不能为空")]
+        public string MineCode
         {
-            get => _redisPwd;
+            get => _mineCode;
             set
             {
-                Set(ref _redisPwd, value);
+                _mineCode = value;
+                RaisePropertyChanged();
             }
         }
 
-        public string Error
+        private bool CanSave()
         {
-            get
-            {
-                return null;
-            }
+            return dataErrors.Count != 0;
         }
 
+        public ICommand CloseCommand { get; set; }
+        public ICommand CancelCommand { get; set; }
+        public bool DialogResult { get; set; } = false;
+
+        #region --验证
         public string this[string columnName]
         {
             get
@@ -65,13 +80,11 @@ namespace DataFusion.Model
                 RemoveDic(dataErrors, context.MemberName);
                 return null;
             }
+
         }
         private Dictionary<string, string> dataErrors = new Dictionary<string, string>();
+        public string Error => null;
 
-        public bool IsValid
-        {
-            get => dataErrors.Count == 0;
-        }
         #region 附属方法
 
         /// <summary>
@@ -95,13 +108,6 @@ namespace DataFusion.Model
         }
         #endregion
 
-        public SystemConfig ToSystemConfig()
-        {
-            return new SystemConfig()
-            {
-                RedisServer = RedisServer,
-                RedisPwd = RedisPwd
-            };
-        }
+        #endregion 
     }
 }

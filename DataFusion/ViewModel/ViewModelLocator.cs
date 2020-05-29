@@ -18,7 +18,9 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 
 using Unity;
-
+using MahApps.Metro.Controls.Dialogs;
+using Unity.Lifetime;
+using Unity.Injection;
 
 namespace DataFusion.ViewModel
 {
@@ -37,31 +39,24 @@ namespace DataFusion.ViewModel
             _container = container;
             container.RegisterType<MainViewModel>();
             container.RegisterType<PluginStateDisplayViewModel>();
-            container.RegisterType<NoUserContentViewModel>();
-            container.RegisterType<SystemConfigViewModel>();
-            container.RegisterType<PluginEditViewModel>();
-            container.RegisterType<PasswordDiaglogViewModel>();
-            container.RegisterType<ProtocalAddWindowViewModel>();
+            container.RegisterType<SystemConfigViewModel>(new ContainerControlledLifetimeManager(), new InjectionConstructor(new ResolvedParameter<MetroDialog>()));
+            container.RegisterType<PluginManagerViewModel>();
+            Main = _container.Resolve<MainViewModel>();
+            container.RegisterInstance(Main, new ContainerControlledLifetimeManager());
+            var dialog = new MetroDialog(Main);
+            container.RegisterInstance(dialog, new ContainerControlledLifetimeManager());
         }
 
 
-        public MainViewModel Main => _container.Resolve<MainViewModel>();
+        public MainViewModel Main { get; private set; }
 
         public PluginStateDisplayViewModel PluginStateDisplayView => _container.Resolve<PluginStateDisplayViewModel>();
 
-        public NoUserContentViewModel NoUserContentViewModel => _container.Resolve<NoUserContentViewModel>();
 
         public SystemConfigViewModel SystemConfigViewModel => _container.Resolve<SystemConfigViewModel>();
-        public PluginEditViewModel PluginEditViewModel => _container.Resolve<PluginEditViewModel>();
-
-        public PasswordDiaglogViewModel DiaglogViewModel => _container.Resolve<PasswordDiaglogViewModel>();
-
-        public ProtocalAddWindowViewModel ProtocalAddWindowViewModel => _container.Resolve<ProtocalAddWindowViewModel>();
 
 
-        public static void Cleanup()
-        {
+        public PluginManagerViewModel PluginManagerViewModel => _container.Resolve<PluginManagerViewModel>();
 
-        }
     }
 }

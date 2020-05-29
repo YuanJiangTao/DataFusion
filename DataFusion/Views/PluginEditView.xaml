@@ -6,12 +6,11 @@
              xmlns:local="clr-namespace:DataFusion.Views"
              mc:Ignorable="d" 
              xmlns:view="clr-namespace:DataFusion.ViewModel"
-             xmlns:hc="https://handyorg.github.io/handycontrol"
-             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:Behaviors="http://schemas.microsoft.com/xaml/behaviors"
              DataContext="{Binding PluginEditViewModel,Source={StaticResource Locator}}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style x:Key="ToggleBtnStyle" BasedOn="{ StaticResource  ToggleButtonSwitch}">
+        <Style x:Key="ToggleBtnStyle" >
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsExample}" Value="True">
                     <Setter Property="ToggleButton.Visibility" Value="Collapsed"></Setter>
@@ -21,7 +20,7 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="BtnDeleteStyle" BasedOn="{StaticResource ButtonDanger}">
+        <Style x:Key="BtnDeleteStyle" >
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsExample}" Value="True">
                     <Setter Property="Button.Visibility" Value="Collapsed"></Setter>
@@ -31,7 +30,7 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="BtnAddStyle" BasedOn="{StaticResource ButtonInfo}">
+        <Style x:Key="BtnAddStyle" >
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsExample}" Value="True">
                     <Setter Property="Button.Visibility" Value="Visible"></Setter>
@@ -43,23 +42,23 @@
         </Style>
     </UserControl.Resources>
     <Border CornerRadius="10">
-        <ListBox Style="{StaticResource WrapPanelHorizontalListBox}" ItemsPanel="{StaticResource FluidMoveBehaviorWrapPanelItemsPanelTemplate}" ItemsSource="{Binding PluginEntryViewModels}" >
+        <ListBox   ItemsSource="{Binding PluginEntryViewModels}" >
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type view:PluginEntryViewModel}">
-                    <hc:Card MaxWidth="240" BorderThickness="0" Effect="{StaticResource EffectShadow2}" Margin="8">
+                    <!--<hc:Card MaxWidth="240" BorderThickness="0"  Margin="8">
                         <hc:Card.HeaderTemplate>
                             <DataTemplate>
                                 <DataTemplate.Triggers>
                                     <DataTrigger Binding="{Binding IsExample}" Value="False">
                                     </DataTrigger>
                                 </DataTemplate.Triggers>
-                                <Border Background="{DynamicResource TitleBrush}">
+                                <Border >
                                     <StackPanel Orientation="Horizontal">
                                         <Image Width="40" Height="40" Visibility="Collapsed" Source="{Binding }"  />
-                                        <TextBlock Style="{StaticResource TextBlockDefault}" Text="{Binding MineName}" />
+                                        <TextBlock  Text="{Binding MineName}" />
                                         <ToggleButton  Style="{StaticResource ToggleBtnStyle}" HorizontalAlignment="Right" IsChecked="{Binding IsEnable}">
                                         </ToggleButton>
-                                        <Button Width="30" HorizontalAlignment="Right" Padding="8" Command="{Binding DeleteCommand}" Margin="5" Style="{StaticResource  BtnDeleteStyle}" hc:IconElement.Geometry="{StaticResource DeleteGeometry}"/>
+                                        <Button Width="30" HorizontalAlignment="Right" Padding="8" Command="{Binding DeleteCommand}" Margin="5" Style="{StaticResource  BtnDeleteStyle}" />
                                         <Button Width="30" HorizontalAlignment="Right" Padding="8" Command="{Binding AddCommand}" Margin="5" Style="{StaticResource BtnAddStyle}">
                                         </Button>
                                     </StackPanel>
@@ -72,7 +71,7 @@
                                     <DataTrigger Binding="{Binding IsExample}" Value="False">
                                         <Setter Property="hc:Card.Content">
                                             <Setter.Value>
-                                                <Border  CornerRadius="4,4,0,0" Style="{StaticResource BorderClip}" >
+                                                <Border  CornerRadius="4,4,0,0"  >
                                                     <Grid>
                                                         <Grid.ColumnDefinitions>
                                                             <ColumnDefinition Width="Auto"/>
@@ -87,23 +86,23 @@
                                                             <RowDefinition/>
                                                             <RowDefinition/>
                                                         </Grid.RowDefinitions>
-                                                        <TextBlock Grid.Row="0" Grid.Column="0" Style="{StaticResource TextBlockDefault}" Text="煤矿编号:" />
-                                                        <TextBlock Grid.Row="0" Grid.Column="1" Style="{StaticResource TextBlockDefaultAccent}" Text="{Binding MineCode}" />
-                                                        <TextBlock Grid.Row="1" Grid.Column="0" Style="{StaticResource TextBlockDefault}" Text="插件名称:" />
-                                                        <TextBlock Grid.Row="1" Grid.Column="1" Style="{StaticResource TextBlockDefaultAccent}" Text="{Binding PluginTitle}" />
-                                                        <TextBlock Grid.Row="2" Grid.Column="0" TextWrapping="Wrap" Style="{StaticResource TextBlockDefault}" Text="插件描述:" />
-                                                        <TextBlock Grid.Row="2" Grid.Column="1" Style="{StaticResource TextBlockDefaultAccent}" Text="{Binding PluginDescription}" />
-                                                        <TextBlock Grid.Row="3" Grid.Column="0" Style="{StaticResource TextBlockDefault}" Text="插件版本:" />
-                                                        <TextBlock Grid.Row="3" Grid.Column="1" Style="{StaticResource TextBlockDefaultAccent}" Text="{Binding PluginVersion}"/>
-                                                        <TextBlock Grid.Row="4" Grid.Column="0" Style="{StaticResource TextBlockDefault}" Text="生成时间:"/>
-                                                        <TextBlock Grid.Row="4" Grid.Column="1" Style="{StaticResource TextBlockDefaultAccent}"  Text="{Binding CreateTime,StringFormat='yyyy-MM-dd HH:mm:ss'}" />
-                                                        <TextBlock Grid.Row="5" Grid.Column="0" Style="{StaticResource TextBlockDefault}" Text="32/64位:"/>
-                                                        <ComboBox  Grid.Row="5" Grid.Column="1" Style="{StaticResource TextBlockComboBoxStyle}" SelectedValue="{Binding Bits}" SelectedValuePath="Content">
+                                                        <TextBlock Grid.Row="0" Grid.Column="0"  Text="煤矿编号:" />
+                                                        <TextBlock Grid.Row="0" Grid.Column="1"  Text="{Binding MineCode}" />
+                                                        <TextBlock Grid.Row="1" Grid.Column="0"  Text="插件名称:" />
+                                                        <TextBlock Grid.Row="1" Grid.Column="1"  Text="{Binding PluginTitle}" />
+                                                        <TextBlock Grid.Row="2" Grid.Column="0" TextWrapping="Wrap" Text="插件描述:" />
+                                                        <TextBlock Grid.Row="2" Grid.Column="1"  Text="{Binding PluginDescription}" />
+                                                        <TextBlock Grid.Row="3" Grid.Column="0"  Text="插件版本:" />
+                                                        <TextBlock Grid.Row="3" Grid.Column="1"  Text="{Binding PluginVersion}"/>
+                                                        <TextBlock Grid.Row="4" Grid.Column="0"  Text="生成时间:"/>
+                                                        <TextBlock Grid.Row="4" Grid.Column="1"  Text="{Binding CreateTime,StringFormat='yyyy-MM-dd HH:mm:ss'}" />
+                                                        <TextBlock Grid.Row="5" Grid.Column="0"  Text="32/64位:"/>
+                                                        <ComboBox  Grid.Row="5" Grid.Column="1" SelectedValue="{Binding Bits}" SelectedValuePath="Content">
                                                             <ComboBoxItem>32</ComboBoxItem>
                                                             <ComboBoxItem>64</ComboBoxItem>
                                                         </ComboBox>
-                                                        <TextBlock Grid.Row="6" Grid.Column="0" Style="{StaticResource TextBlockDefault}" Text="是否调试:"/>
-                                                        <CheckBox  Grid.Row="6" Grid.Column="1" Style="{StaticResource CheckBoxBaseStyle}" IsChecked="{Binding IsDebug}"/>
+                                                        <TextBlock Grid.Row="6" Grid.Column="0" Text="是否调试:"/>
+                                                        <CheckBox  Grid.Row="6" Grid.Column="1"  IsChecked="{Binding IsDebug}"/>
                                                     </Grid>
                                                 </Border>
                                             </Setter.Value>
@@ -112,13 +111,13 @@
                                     <DataTrigger Binding="{Binding IsExample}" Value="True">
                                         <Setter Property="hc:Card.Content">
                                             <Setter.Value>
-                                                <Border Style="{StaticResource BorderClip}">
+                                                <Border >
                                                     <Image Width="50" Height="50" ToolTip="新增" Source="../Resources/Img/add.png" Stretch="Uniform" >
-                                                        <i:Interaction.Triggers>
-                                                            <i:EventTrigger>
-                                                                <i:InvokeCommandAction Command="{Binding Path=DataContext.AddCommand,RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type UserControl}}}"></i:InvokeCommandAction>
-                                                            </i:EventTrigger>
-                                                        </i:Interaction.Triggers>
+                                                        <Behaviors:Interaction.Triggers>
+                                                            <Behaviors:EventTrigger>
+                                                                <Behaviors:InvokeCommandAction Command="{Binding Path=DataContext.AddCommand,RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type UserControl}}}"></Behaviors:InvokeCommandAction>
+                                                            </Behaviors:EventTrigger>
+                                                        </Behaviors:Interaction.Triggers>
                                                     </Image>
                                                 </Border>
                                             </Setter.Value>
@@ -130,7 +129,7 @@
                         
 
                         
-                    </hc:Card>
+                    </hc:Card>-->
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

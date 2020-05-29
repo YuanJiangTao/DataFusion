@@ -12,18 +12,33 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using HandyControl.Controls;
-
+using DataFusion.ViewModel;
+using MahApps.Metro.Controls.Dialogs;
 namespace DataFusion
 {
     /// <summary>
     /// MainWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow//:HandyControl.Controls.BlurWindow
+    public partial class MainWindow
     {
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void HamburgerMenuControl_ItemInvoked(object sender, MahApps.Metro.Controls.HamburgerMenuItemInvokedEventArgs args)
+        {
+            HamburgerMenuControl.Content = args.InvokedItem;
+        }
+
+        private void BtnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            this.SystemConfigFlyout.IsOpen = !this.SystemConfigFlyout.IsOpen;
+        }
+
+        private void BtnPluginEntrySettings_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

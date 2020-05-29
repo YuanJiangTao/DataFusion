@@ -10,52 +10,64 @@ using DataFusion.Interfaces.Utils;
 using System.IO;
 using DataFusion.Data;
 using System.Runtime.CompilerServices;
+using System.Windows.Input;
+using GalaSoft.MvvmLight.CommandWpf;
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
 
 namespace DataFusion.ViewModel
 {
     public class SystemConfigViewModel : ViewModelBase
     {
-        private SystemConfigSg _systemConfigModel;
-
         private XmlStorage<SystemConfigSg> _systemConfigSgStorage;
-        public SystemConfigViewModel()
+        private MetroDialog _dialog;
+        public SystemConfigViewModel(MetroDialog dialog)
         {
             var configPath = PathUtils.Combine(Constant.ConfigFolder, Constant.SystemConfig);
             _systemConfigSgStorage = new XmlStorage<SystemConfigSg>(configPath);
             _systemConfigSgStorage.Load();
-            _systemConfigModel = _systemConfigSgStorage.Storage;
-
+            SystemConfigModel = _systemConfigSgStorage.Storage;
+            SaveCommand = new RelayCommand(Save);
+            _dialog = dialog;
         }
-
-        
-
-
-
-        public SystemConfigSg SystemConfigModel { get => _systemConfigModel; }
+        public SystemConfigSg SystemConfigModel { get; }
 
         public string RedisServer
         {
-            get => _systemConfigModel.RedisServer;
+            get => SystemConfigModel.RedisServer;
             set
             {
-                _systemConfigModel.RedisServer = value;
+                SystemConfigModel.RedisServer = value;
                 RaisePropertyChanged();
             }
         }
         public string RedisPwd
         {
-            get => _systemConfigModel.RedisPwd;
+            get => SystemConfigModel.RedisPwd;
             set
             {
-                _systemConfigModel.RedisPwd = value;
+                SystemConfigModel.RedisPwd = value;
                 RaisePropertyChanged();
             }
         }
+
+        private async void Save()
+        {
+            if (SystemConfigModel == null || !SystemConfigModel.IsValid)
+            {
+                return;
+            }
+            _systemConfigSgStorage.Save();
+            await _dialog.ShowTipsAsync("保存成功!");
+        }
+
         public override void RaisePropertyChanged([CallerMemberName] string propertyName = null)
         {
             base.RaisePropertyChanged(propertyName);
-            _systemConfigSgStorage.Save();
+
         }
+
+        public ICommand SaveCommand { get; set; }
 
     }
 }

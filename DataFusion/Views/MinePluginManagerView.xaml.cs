@@ -18,9 +18,9 @@ namespace DataFusion.Views
     /// <summary>
     /// ProtocalManagerView.xaml 的交互逻辑
     /// </summary>
-    public partial class ProtocalManagerView : UserControl
+    public partial class MinePluginManagerView : UserControl
     {
-        public ProtocalManagerView()
+        public MinePluginManagerView()
         {
             InitializeComponent();
         }
