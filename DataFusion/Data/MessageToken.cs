@@ -26,6 +26,12 @@ namespace DataFusion.Data
         public static readonly string DeleteMinePlugin = nameof(DeleteMinePlugin);
         public static readonly string LoadMinePlugin = nameof(LoadMinePlugin);
         public static readonly string UnloadMinePlugin = nameof(UnloadMinePlugin);
+        public static readonly string ReloadMinePlugin = nameof(ReloadMinePlugin);
+
+        public static readonly string ShowErrorMessage = nameof(ShowErrorMessage);
+
+
+        public static readonly string ProtocalStateChanged = nameof(ProtocalStateChanged);
 
 
 

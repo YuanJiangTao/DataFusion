@@ -62,12 +62,10 @@ namespace DataFusion.ViewModel
            where TControl : new()
         {
             var customDialog = new CustomDialog() { Title = title };
-
-            var vm = newTFunc(async instance => 
+            var vm = newTFunc( instance => 
             {
-                await _instance.HideMetroDialogAsync(customDialog);
+                _ = _instance.HideMetroDialogAsync(customDialog);
             });
-
             dynamic userControl = new TControl();
             userControl.DataContext = vm;
             customDialog.Content = userControl;

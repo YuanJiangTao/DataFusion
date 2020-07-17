@@ -50,11 +50,17 @@ namespace DataFusion.ViewModel
             _remoteProcess.Start();
             new ProcessMonitor(OnProcessExited).Start(_remoteProcess.Process);
             _remoteProcess.LoadPlugin();
-
         }
         public void CreateView()
         {
-            View = FrameworkElementAdapters.ContractToViewAdapter(_remoteProcess.RemotePlugin.Contract);
+            try
+            {
+                View = FrameworkElementAdapters.ContractToViewAdapter(_remoteProcess.RemotePlugin.Contract);
+            }
+            catch (Exception)
+            {
+
+            }
         }
 
 
@@ -107,14 +113,14 @@ namespace DataFusion.ViewModel
             {
                 AssemblyPath = PluginEntrySg.AssemblyPath,
                 AssemblyName = Path.GetFileNameWithoutExtension(PluginEntrySg.AssemblyPath),
-                Bits = PluginEntrySg.Bits,
+                Bits = MineProtocalConfig.Bits,
                 Title = PluginEntrySg.Title,
                 Version = PluginEntrySg.Version,
                 Description = PluginEntrySg.Description,
                 OriginalFilename = PluginEntrySg.OriginalFilename,
                 Parameters = PluginEntrySg.Parameters,
                 Company = PluginEntrySg.Company,
-                IsDebug = PluginEntrySg.IsDebug,
+                IsDebug = MineProtocalConfig.IsDebug,
                 ProductName = PluginEntrySg.ProductName,
                 IsEnable = PluginEntrySg.IsEnable
             };

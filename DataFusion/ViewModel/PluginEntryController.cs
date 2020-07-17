@@ -22,6 +22,8 @@ using DataFusion.Interfaces;
 using MahApps.Metro.Controls;
 using MahApps.Metro.IconPacks;
 using DataFusion.ViewModel.Storages;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace DataFusion.ViewModel
 {
@@ -29,19 +31,18 @@ namespace DataFusion.ViewModel
     {
         private IUnityContainer _unityContainer;
         private readonly TaskScheduler _scheduler;
-        public PluginEntryController(IUnityContainer container)
+        private readonly DataService _service;
+        private ILogDog _log;
+        public PluginEntryController(IUnityContainer container, DataService service)
         {
-            MenuItems = new ObservableCollection<HamburgerMenuIconItem>();
-            //MenuItems.Add(new HamburgerMenuIconItem()
-            //{
-            //    Label = "插件状态",
-            //    Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.Home },
-            //    Tag = new Views.PluginStateDisplayView()
-            //});
+            _service = service;
+            MenuItems = new ObservableCollection<HamburgerMenuIconItemWrapper>();
 
-            Messenger.Default.Register<PluginEntryViewModel>(this, MessageToken.UnloadMinePlugin, UnloadMinePlguin);
+
+            Messenger.Default.Register<MinePluginConfigModel>(this, MessageToken.UnloadMinePlugin, UnloadMinePlguin);
             Messenger.Default.Register<MinePluginConfigModel>(this, MessageToken.LoadMinePlugin, LoadMinePlugin);
             Messenger.Default.Register<MinePluginConfigInfoViewModel>(this, MessageToken.DeleteMinePlugin, DeleteMinePlugin);
+            Messenger.Default.Register<MinePluginConfigModel>(this, MessageToken.ReloadMinePlugin, ReloadMinePlugin);
 
 
             PluginEntries = new ObservableCollection<PluginEntrySg>();
@@ -49,17 +50,13 @@ namespace DataFusion.ViewModel
             LoadPluginEntryVms = new ObservableCollection<PluginEntryViewModel>();
             ProtocalInfoModels = new ObservableCollection<ProtocalInfoModel>();
             MinePluginConfigInfoViewModels = new ObservableCollection<MinePluginConfigInfoViewModel>();
-
+            MineProtocalEnableConfigViewModels = new ObservableCollection<MineProtocalEnableConfigViewModel>();
+            _log = container.Resolve<ILogDog>(Constant.ClietnName);
             _unityContainer = container;
             _scheduler = TaskScheduler.FromCurrentSynchronizationContext();
             try
             {
-#if DEBUG
-                Test();
-#endif
-
                 ScanPluginEntries();
-
             }
             catch (Exception ex)
             {
@@ -67,61 +64,107 @@ namespace DataFusion.ViewModel
             }
         }
 
+        public Task IniMinePlugins()
+        {
+            return Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    _service.GetMinePluginConfigModels().ToList()?.ForEach(LoadMinePlugin);
+                }
+                catch (Exception ex)
+                {
+                    _log.Error($"初始化插件：{ex.ToString()}");
+                }
+            }, new CancellationTokenSource().Token, TaskCreationOptions.None, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
 
         /// <summary>
         /// 删除已经定义的煤矿插件信息，同时要卸载还在运行的插件
         /// </summary>
         /// <param name="minePluginConfigInfoVm"></param>
-        private void DeleteMinePlugin(MinePluginConfigInfoViewModel minePluginConfigInfoVm)
+        private void DeleteMinePlugin(MinePluginConfigInfoViewModel configInfoViewModel)
         {
-
+            if (configInfoViewModel != null)
+            {
+                MinePluginConfigInfoViewModels.Remove(configInfoViewModel);
+                //先卸载
+                UnloadMinePlguin(configInfoViewModel.MinePluginConfigModel);
+                //TODO:删除配置信息
+                _service.DeleteMinePluginConfigModel(configInfoViewModel.MinePluginConfigModel);
+            }
         }
+
+
 
 
         /// <summary>
         /// 卸载插件
         /// </summary>
         /// <param name="pluginEntryViewModel"></param>
-        private void UnloadMinePlguin(PluginEntryViewModel pluginEntryViewModel)
+        private void UnloadMinePlguin(MinePluginConfigModel minePluginConfig)
         {
             try
             {
-                //TODO:卸载插件
-                //Messenger.Default.Send<string>()
+                for (var i = 0; i < MenuItems.Count; i++)
+                {
+                    if (MenuItems[i].Id == minePluginConfig.Id)
+                    {
+                        MenuItems.RemoveAt(i);
+                        break;
+                    }
+                }
+                //删除插件
+                if (_loadPluginEntrys.TryGetValue(minePluginConfig.Id.ToString(), out var pluginEntry))
+                {
+                    pluginEntry.Dispose();
+                }
+                _service.HandleMinePluginConfigModel(minePluginConfig);
+                for (var i = 0; i < MineProtocalEnableConfigViewModels.Count; i++)
+                {
+                    if (MineProtocalEnableConfigViewModels[i].Id == minePluginConfig.Id)
+                        MineProtocalEnableConfigViewModels.RemoveAt(i);
+                }
+                Messenger.Default.Send<string>("", MessageToken.ProtocalStateChanged);
+
             }
             catch (Exception ex)
             {
                 LogD.Error("卸载插件错误:" + ex);
             }
         }
+
+        private void ReloadMinePlugin(MinePluginConfigModel minePluginConfigModel)
+        {
+            LoadMinePlugin(minePluginConfigModel, false);
+        }
+        private void LoadMinePlugin(MinePluginConfigModel mineProtocalConfigInfo)
+        {
+            LoadMinePlugin(mineProtocalConfigInfo, true);
+        }
+
         /// <summary>
         /// 添加煤矿插件信息，同时运行插件
         /// </summary>
         /// <param name="mineProtocalConfigInfo"></param>
-        private async void LoadMinePlugin(MinePluginConfigModel mineProtocalConfigInfo)
+        private async void LoadMinePlugin(MinePluginConfigModel mineProtocalConfigInfo, bool isAdd = true)
         {
+            MineProtocalEnableConfigViewModels.Add(new MineProtocalEnableConfigViewModel(mineProtocalConfigInfo, _service));
             var menuItem = await LoadPluginEntryAsync(mineProtocalConfigInfo);
             if (menuItem != null)
             {
                 MenuItems.Add(menuItem);
+                if (isAdd)
+                {
+                    var minePluginConfigViewModel = new MinePluginConfigInfoViewModel(mineProtocalConfigInfo);
+                    MinePluginConfigInfoViewModels.Add(minePluginConfigViewModel);
+                    _service.HandleMinePluginConfigModel(mineProtocalConfigInfo);
+                }
             }
+            Messenger.Default.Send<string>("", MessageToken.ProtocalStateChanged);
         }
-
-
-        private void Test()
-        {
-            MinePluginConfigModel configInfo = new MinePluginConfigModel()
-            {
-                MineName = "车集矿",
-                MineCode = "0123456789",
-                IsEnable = true
-            };
-            MineProtocalConfigInfos.Add(configInfo);
-        }
-
-
-
-        public ObservableCollection<HamburgerMenuIconItem> MenuItems { get; set; }
+        public ObservableCollection<HamburgerMenuIconItemWrapper> MenuItems { get; set; }
 
         public ObservableCollection<MinePluginConfigModel> MineProtocalConfigInfos { get; private set; }
 
@@ -131,6 +174,9 @@ namespace DataFusion.ViewModel
 
         public ObservableCollection<MinePluginConfigInfoViewModel> MinePluginConfigInfoViewModels { get; set; }
 
+        public ObservableCollection<MineProtocalEnableConfigViewModel> MineProtocalEnableConfigViewModels { get; set; }
+
+        private ConcurrentDictionary<string, PluginEntry> _loadPluginEntrys = new ConcurrentDictionary<string, PluginEntry>();
 
         private void ScanPluginEntries()
         {
@@ -177,22 +223,23 @@ namespace DataFusion.ViewModel
         }
 
 
-      
-        public async Task<HamburgerMenuIconItem> LoadPluginEntryAsync(MinePluginConfigModel mineProtocalConfigInfo)
+
+        public async Task<HamburgerMenuIconItemWrapper> LoadPluginEntryAsync(MinePluginConfigModel mineProtocalConfigInfo)
         {
-            var pluginEntrySg = PluginEntries.FirstOrDefault(p => p.Title == mineProtocalConfigInfo.PluginEntrySg.Title && p.Version == mineProtocalConfigInfo.PluginEntrySg.Version);
+            var pluginEntrySg = PluginEntries.FirstOrDefault(p => p.Title == mineProtocalConfigInfo.Title && p.Version == mineProtocalConfigInfo.Version);
             if (pluginEntrySg != null)
             {
                 return await Task.Run(() => LoadPluginEntry(pluginEntrySg, mineProtocalConfigInfo)).ContinueWith(t =>
                 {
                     var pluginEntry = t.Result;
                     pluginEntry.CreateView();
-                    //AddAvaiablePluginEntry(pluginEntrySg, mineProtocalConfigInfo);
-                    return new HamburgerMenuIconItem()
+                    _loadPluginEntrys.TryAdd(mineProtocalConfigInfo.Id.ToString(), pluginEntry);
+                    return new HamburgerMenuIconItemWrapper()
                     {
                         Label = mineProtocalConfigInfo.MineName,
                         Tag = pluginEntry.View,
-                        Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.Home }
+                        Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.Home },
+                        Id = mineProtocalConfigInfo.Id
                     };
                 }, _scheduler);
             }
@@ -208,6 +255,7 @@ namespace DataFusion.ViewModel
             }
             catch (Exception ex)
             {
+                _log.Error(ex.ToString());
                 DisposePlugin(pluginEntry);
             }
             return pluginEntry;
@@ -223,7 +271,7 @@ namespace DataFusion.ViewModel
             }
             catch (Exception ex)
             {
-
+                _log.Error(ex.ToString());
             }
         }
         private void PluginEntry_Error(object sender, PluginErrorEventArgs e)

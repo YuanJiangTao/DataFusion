@@ -38,13 +38,6 @@ namespace DataFusion.ViewModel
                 return;
             try
             {
-            }
-            catch (Exception e)
-            {
-
-            }
-            try
-            {
 
             }
             catch (Exception e)
@@ -65,7 +58,10 @@ namespace DataFusion.ViewModel
                     MineName = vm.MineName,
                     CreatTime = DateTime.Now,
                     IsEnable = true,
-                    PluginEntrySg = PluginEntrySg
+                    Title = PluginEntrySg.Title,
+                    Version = PluginEntrySg.Version,
+                    Bits = Bits,
+                    IsDebug = IsDebug
                 };
                 Messenger.Default.Send<MinePluginConfigModel>(mineConfigInfo, MessageToken.LoadMinePlugin);
             }
@@ -81,9 +77,30 @@ namespace DataFusion.ViewModel
         public string PluginTitle => PluginEntrySg.Title;
         public string PluginDescription => PluginEntrySg.Description;
         public string PluginVersion => PluginEntrySg.Version;
-        public int Bits => PluginEntrySg.Bits;
 
-        public bool IsDebug => PluginEntrySg.IsDebug;
+        private int _bits = 32;
+
+        public int Bits
+        {
+            get => _bits;
+            set
+            {
+                _bits = value;
+                RaisePropertyChanged();
+            }
+        }
+        private bool _isDebug;
+
+
+        public bool IsDebug
+        {
+            get => _isDebug;
+            set
+            {
+                _isDebug = value;
+                RaisePropertyChanged();
+            }
+        }
 
 
         public ICommand LoadCommand { get; set; }

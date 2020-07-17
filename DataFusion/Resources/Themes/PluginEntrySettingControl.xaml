@@ -3,7 +3,9 @@
                           xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                     xmlns:local="clr-namespace:DataFusion.UserControls"
                     >
-
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+    </ResourceDictionary.MergedDictionaries>
     <Style TargetType="{x:Type local:PluginEntrySettingControl}">
         <Setter Property="Template">
             <Setter.Value>
@@ -26,8 +28,8 @@
                                                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                                                         </Grid.ColumnDefinitions>
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="{Binding Title}"></TextBlock>
-                                                            <TextBlock Text="{Binding Parameters}"></TextBlock>
+                                                            <TextBlock Text="{Binding PluginEntrySg.Title}"></TextBlock>
+                                                            <TextBlock Text="{Binding PluginEntrySg.Parameters}"></TextBlock>
                                                         </StackPanel>
 
                                                         <StackPanel Orientation="Horizontal" Grid.Column="1">
@@ -92,20 +94,20 @@
                                                     <Label Content="编译日期:" Grid.Row="1" Grid.Column="2"></Label>
                                                     <Label Content="备注:" Grid.Row="3" Grid.Column="2"></Label>
 
-                                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding ProductName}" IsReadOnly="True"></TextBox>
-                                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Description}" IsReadOnly="True"></TextBox>
-                                                    <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding AssemblyPath}" IsReadOnly="True"></TextBox>
+                                                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding PluginEntrySg.ProductName}" IsReadOnly="True"></TextBox>
+                                                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding PluginEntrySg.Description}" IsReadOnly="True"></TextBox>
+                                                    <TextBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding PluginEntrySg.AssemblyPath}" IsReadOnly="True"></TextBox>
                                                     <ComboBox Grid.Row="3" Grid.Column="1"
                                                           SelectedValue="{Binding Bits}" SelectedValuePath="Content">
                                                         <ComboBoxItem>32</ComboBoxItem>
                                                         <ComboBoxItem>64</ComboBoxItem>
                                                     </ComboBox>
 
-                                                    <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding Version }" IsReadOnly="True"></TextBox>
-                                                    <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding BuildTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" IsReadOnly="True"></TextBox>
-                                                    <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding Parameters}"></TextBox>
-                                                    <Button   Grid.Row="4" Grid.Column="2"  Grid.ColumnSpan="2" Content="加载" Command="{Binding LoadCommand}" Margin="10,5,20,5" />
-
+                                                    <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding PluginEntrySg.Version }" IsReadOnly="True"></TextBox>
+                                                    <TextBox Grid.Row="1" Grid.Column="3" Text="{Binding PluginEntrySg.BuildTime, StringFormat='yyyy-MM-dd HH:mm:ss'}" IsReadOnly="True"></TextBox>
+                                                    <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding PluginEntrySg.Parameters}"></TextBox>
+                                                    <CheckBox Grid.Row="4" Grid.Column="1" IsChecked="{Binding IsDebug}" />
+                                                    <Button   Grid.Row="4" Grid.Column="2"  VerticalAlignment="Center" Width="70"  Grid.ColumnSpan="2" Style="{StaticResource MahApps.Styles.Button.AccentedSquare}"  Content="加载" Command="{Binding LoadCommand}" Margin="10,5,20,5" />
                                                     <!--<mah:ToggleSwitch Grid.Row="4" Grid.Column="2"  Grid.ColumnSpan="2"
                                                                   IsChecked="{Binding IsEnable}" OnLabel="启用" OffLabel="禁用"
                                                                   Margin="10,5,20,5"/>

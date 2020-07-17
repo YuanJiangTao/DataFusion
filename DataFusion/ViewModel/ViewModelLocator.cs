@@ -41,6 +41,7 @@ namespace DataFusion.ViewModel
             container.RegisterType<PluginStateDisplayViewModel>();
             container.RegisterType<SystemConfigViewModel>(new ContainerControlledLifetimeManager(), new InjectionConstructor(new ResolvedParameter<MetroDialog>()));
             container.RegisterType<PluginManagerViewModel>();
+            container.RegisterType<PluginCatalogEntryViewModel>();
             Main = _container.Resolve<MainViewModel>();
             container.RegisterInstance(Main, new ContainerControlledLifetimeManager());
             var dialog = new MetroDialog(Main);
@@ -50,13 +51,15 @@ namespace DataFusion.ViewModel
 
         public MainViewModel Main { get; private set; }
 
-        public PluginStateDisplayViewModel PluginStateDisplayView => _container.Resolve<PluginStateDisplayViewModel>();
+        public PluginStateDisplayViewModel PluginStateDisplayViewModel => _container.Resolve<PluginStateDisplayViewModel>();
 
 
         public SystemConfigViewModel SystemConfigViewModel => _container.Resolve<SystemConfigViewModel>();
 
 
         public PluginManagerViewModel PluginManagerViewModel => _container.Resolve<PluginManagerViewModel>();
+
+        public PluginCatalogEntryViewModel PluginCatalogEntryViewModel => _container.Resolve<PluginCatalogEntryViewModel>();
 
     }
 }

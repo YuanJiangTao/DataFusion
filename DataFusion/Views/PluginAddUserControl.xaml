@@ -11,7 +11,7 @@
         <Thickness x:Key="ColumnMargin">0 5 10 0</Thickness>
         <Thickness x:Key="ControlMargin">0 5 0 0</Thickness>
     </UserControl.Resources>
-    <Grid>
+    <Grid FocusManager.FocusedElement="{Binding ElementName=txtMineName}" Grid.IsSharedSizeScope="True">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition/>
@@ -21,34 +21,26 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label Grid.Row="0" Grid.Column="0" x:Name="lbMineName" Margin="{StaticResource ColumnMargin}" Content="煤矿名称" />
+        <Label Grid.Row="0" Grid.Column="0" x:Name="lbMineName" Margin="{StaticResource ColumnMargin}" Content="煤矿名称:" />
 
-        <TextBox  Margin="{StaticResource ColumnMargin}" Grid.Column="1" Grid.Row="0"
+        <TextBox  Margin="{StaticResource ColumnMargin}" Grid.Column="1" Grid.Row="0" x:Name="txtMineName"
                          HorizontalContentAlignment="Stretch"
-                         Controls:TextBoxHelper.ClearTextButton="True"
-                         Controls:TextBoxHelper.IsWaitingForData="True"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.Watermark="{Binding ElementName=lbMineName,Path=Content}"
-                         Controls:TextBoxHelper.WatermarkAlignment="Left"
-                         SpellCheck.IsEnabled="True" Text="{Binding MineName}"
-                         ToolTip="Default alignment">
+                                          Controls:TextBoxHelper.Watermark="煤矿名称不能为空"
+                         SpellCheck.IsEnabled="True" Text="{Binding MineName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"
+                         >
         </TextBox>
-        <Label Grid.Row="1" Grid.Column="0" x:Name="lbMineCode" Margin="{StaticResource ColumnMargin}" Content="煤矿编码" />
+        <Label Grid.Row="1" Grid.Column="0" x:Name="lbMineCode" Margin="{StaticResource ColumnMargin}" Content="煤矿编码:" />
 
         <TextBox  Margin="{StaticResource ColumnMargin}" Grid.Column="1" Grid.Row="1"
                          HorizontalContentAlignment="Stretch"
-                         Controls:TextBoxHelper.ClearTextButton="True"
-                         Controls:TextBoxHelper.IsWaitingForData="True"
-                         Controls:TextBoxHelper.UseFloatingWatermark="True"
-                         Controls:TextBoxHelper.Watermark="{Binding ElementName=lbMineCode,Path=Content}"
-                         Controls:TextBoxHelper.WatermarkAlignment="Left"
-                         SpellCheck.IsEnabled="True" Text="{Binding MineCode}"
-                         ToolTip="Default alignment">
+                        Controls:TextBoxHelper.Watermark="煤矿编号不能为空"
+                         SpellCheck.IsEnabled="True" Text="{Binding MineCode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, NotifyOnValidationError=True}"
+                         >
         </TextBox>
-        <StackPanel Margin="0,40,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"  Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button  Content="确 定" Width="120"  Height="30" Margin="0,0,140,0" Style="{StaticResource MahApps.Styles.Button.Square}"  Command="{Binding CloseCommand}" HorizontalAlignment="Right" >
+        <StackPanel Margin="0,20,0,20" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"  Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button  Content="确 定"  Margin="0,0,60,0" Style="{StaticResource MahApps.Styles.Button.Dialogs}"  Command="{Binding CloseCommand}" HorizontalAlignment="Right" >
             </Button>
-            <Button   Content="返 回" Width="120" Height="30" HorizontalAlignment="Right" Style="{StaticResource MahApps.Styles.Button.Square}" Command="{Binding CancelCommand}"></Button>
+            <Button   Content="返 回" Margin="0,0,20,0"  HorizontalAlignment="Right" Style="{StaticResource MahApps.Styles.Button.Dialogs}" Command="{Binding CancelCommand}"></Button>
         </StackPanel>
     </Grid>
 </UserControl>

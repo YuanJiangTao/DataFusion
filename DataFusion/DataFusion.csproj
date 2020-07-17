@@ -177,6 +177,11 @@
     <Compile Include="Model\ClientRunInfo.cs" />
     <Compile Include="Model\MineInfoModel.cs" />
     <Compile Include="Model\MinePluginConfigModel.cs" />
+    <Compile Include="Resources\Converter\ZIndexConverter.cs" />
+    <Compile Include="UserControls\AnimationPath.cs" />
+    <Compile Include="ViewModel\HamburgerMenuIconItemWrapper.cs" />
+    <Compile Include="ViewModel\MineProtocalEnableConfigViewModel.cs" />
+    <Compile Include="ViewModel\PluginCatalogEntryViewModel.cs" />
     <Compile Include="ViewModel\Storages\PluginEntrySg.cs" />
     <Compile Include="Model\ProtocalInfoModel.cs" />
     <Compile Include="Model\SystemConfigModel.cs" />
@@ -190,16 +195,14 @@
     <Compile Include="UserControls\PluginEntrySettingControl.cs" />
     <Compile Include="ViewModel\MinePluginConfigInfoViewModel.cs" />
     <Compile Include="ViewModel\PluginAddViewModel.cs" />
+    <Compile Include="ViewModel\ToastController.cs" />
+    <Compile Include="ViewModel\ToastErrorMsg.cs" />
     <Compile Include="Views\PluginAddUserControl.xaml.cs">
       <DependentUpon>PluginAddUserControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PluginStateDisplay.xaml.cs">
-      <DependentUpon>PluginStateDisplay.xaml</DependentUpon>
     </Compile>
     <Compile Include="Data\Constant.cs" />
     <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Utils\ProductUtil.cs" />
-    <Compile Include="ViewModel\MainItemMenuViewModel.cs" />
     <Compile Include="ViewModel\MetroDialog.cs" />
     <Compile Include="ViewModel\MineDisplayViewModel.cs" />
     <Compile Include="ViewModel\PluginEntry.cs" />
@@ -215,13 +218,9 @@
       <DependentUpon>ErrorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="Model\SubMenuItem.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="Views\PluginEditView.xaml.cs">
       <DependentUpon>PluginEditView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\PluginManagerView.xaml.cs">
-      <DependentUpon>PluginManagerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\PluginStateDisplayView.xaml.cs">
       <DependentUpon>PluginStateDisplayView.xaml</DependentUpon>
@@ -231,6 +230,9 @@
     </Compile>
     <Compile Include="Views\SplashView.xaml.cs">
       <DependentUpon>SplashView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SystemConfigView.xaml.cs">
+      <DependentUpon>SystemConfigView.xaml</DependentUpon>
     </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -272,19 +274,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\PluginStateDisplay.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\ErrorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\PluginEditView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\PluginManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -297,6 +291,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SplashView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SystemConfigView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

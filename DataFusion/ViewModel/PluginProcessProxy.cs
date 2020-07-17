@@ -1,5 +1,6 @@
 ﻿using DataFusion.Interfaces;
 using DataFusion.PluginHosting;
+using GalaSoft.MvvmLight.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -83,12 +84,45 @@ namespace DataFusion.ViewModel
             };
             Trace.WriteLine(info.Arguments);
             _process = Process.Start(info);
-        }
+       }
 
         public IRemotePlugin RemotePlugin { get; private set; }
         public void Dispose()
         {
+            if (RemotePlugin != null)
+            {
+                try
+                {
+                    RemotePlugin.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Messenger.Default.Send<ToastErrorMsg>(new ToastErrorMsg("Remote plugin dispose Error", ex));
+                }
+            }
 
+            if (_pluginLoader != null)
+            {
+                try
+                {
+                    _pluginLoader.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Messenger.Default.Send<ToastErrorMsg>(new ToastErrorMsg("Error disposing plugin loader ", ex));
+                }
+            }
+
+            // this can take some time if we have many plugins; should be made asynchronous
+            if (Process != null)
+            {
+                Process.WaitForExit(5000);
+                if (!Process.HasExited)
+                {
+                    Messenger.Default.Send<ToastErrorMsg>(new ToastErrorMsg("Remote process did not exit within timeout period and will be terminated ", new Exception()));
+                    Process.Kill();
+                }
+            }
         }
     }
 }

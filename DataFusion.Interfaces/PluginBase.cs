@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Animation;
 
 namespace DataFusion.Interfaces
 {
@@ -18,7 +19,10 @@ namespace DataFusion.Interfaces
         protected IPluginHost PluginHost;
         protected IHostConfig HostConfig;
         public string BaseDirectory;
-        private Thread _loadThread;
+
+        private Task _loadTask;
+        private readonly CancellationTokenSource _cts = new CancellationTokenSource();
+       // private Thread _loadThread;
         public PluginBase(IPluginHost host)
         {
             CultureInfoHelper.SetDateTimeFormat();
@@ -40,9 +44,11 @@ namespace DataFusion.Interfaces
         {
             try
             {
-                _loadThread.Join(3000);
-                _loadThread.Abort();
-                _loadThread.DisableComObjectEagerCleanup();
+                Task.Delay(3000);
+                _cts.Cancel();
+                //_loadThread.Join(3000);
+                //_loadThread.Abort();
+                //_loadThread.DisableComObjectEagerCleanup();
             }
             catch (Exception ex)
             {
@@ -61,11 +67,18 @@ namespace DataFusion.Interfaces
             Console.WriteLine("loaded..");
             try
             {
-                _loadThread = new Thread(() =>
-                {
-                    Onload();
-                });
-                _loadThread.Start();
+                _loadTask = new Task(() =>
+                  {
+                      Onload();
+                  }, _cts.Token);
+                _loadTask.Start();
+
+                //_loadThread = new Thread(() =>
+                //{
+                //    Onload();
+                //});
+                //_loadThread.IsBackground = false;
+                //_loadThread.Start();
             }
             catch (Exception e)
             {

@@ -1,4 +1,5 @@
 using DataFusion.Data;
+using DataFusion.Interfaces;
 using DataFusion.Services;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -17,6 +18,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Unity;
 
 namespace DataFusion.ViewModel
 {
@@ -24,40 +26,83 @@ namespace DataFusion.ViewModel
     {
         private DataService _dataService;
         private PluginEntryController _pluginEntryController;
+        private ILogDog _log;
 
 
-        public MainViewModel(DataService dataService, PluginEntryController pluginEntryController)
+        public MainViewModel(IUnityContainer container, DataService dataService, PluginEntryController pluginEntryController)
         {
+            _log = container.Resolve<ILogDog>(Constant.ClietnName);
             Dialog = DialogCoordinator.Instance;
             _dataService = dataService;
             _pluginEntryController = pluginEntryController;
-            MenuItems = new ObservableCollection<HamburgerMenuItem>();
             OptionsMenuItems = new ObservableCollection<HamburgerMenuIconItem>();
             LoadCommand = new Lazy<RelayCommand>(() => new RelayCommand(Load)).Value;
+            ToastCommand = new Lazy<RelayCommand>(() => new RelayCommand(Toast)).Value;
+            Messenger.Default.Register<ToastErrorMsg>(this, toastErrorMsg =>
+            {
+                this.ToastText = toastErrorMsg.ToString();
+                _log.Error(toastErrorMsg.ErrorMessage, toastErrorMsg.Exception);
+            });
         }
 
+        private void Toast()
+        {
+            FlyoutToastIsOpen = !FlyoutToastIsOpen;
+        }
 
 
         public string SystemTitle => "数据融合";
 
         public ICommand LoadCommand { get; set; }
 
+        public ICommand ToastCommand { get; }
+
+
         public IDialogCoordinator Dialog { get; }
 
         private async void Load()
         {
+            _pluginEntryController.MenuItems.Add(new HamburgerMenuIconItemWrapper()
+            {
+                Label = "首页",
+                Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.PowerPlug },
+                Tag = new Views.PluginStateDisplayView()
+            });
+            OptionsMenuItems.Add(new HamburgerMenuIconItem()
+            {
+                Label = "系统设置",
+                Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.SettingsHelper },
+                Tag = new Views.SystemConfigView()
+            });
             OptionsMenuItems.Add(new HamburgerMenuIconItem()
             {
                 Label = "插件管理",
                 Icon = new PackIconMaterial() { Kind = PackIconMaterialKind.SettingsHelper },
-                Tag = new Views.PluginManagerView()
+                Tag = new Views.MinePluginManagerView()
             });
+
+
+
+
+
             _dispatcherTimer = new DispatcherTimer();
             _dispatcherTimer.Tick += new EventHandler(DispatcherTimer_Tick);
             _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             _dispatcherTimer.Start();
             await Task.Delay(100);
         }
+        private HamburgerMenuIconItemWrapper _selectedMenuItem;
+
+        public HamburgerMenuIconItemWrapper SelectedMenuItem
+        {
+            get => _selectedMenuItem;
+            set
+            {
+                _selectedMenuItem = value;
+                RaisePropertyChanged();
+            }
+        }
+
 
         private void DispatcherTimer_Tick(object sender, EventArgs e)
         {
@@ -90,6 +135,7 @@ namespace DataFusion.ViewModel
                     AnimateShow = true,
                     AnimateHide = false
                 };
+                SelectedMenuItem = MenuItems.First();
                 var result = await Dialog.ShowMessageAsync(this, "提示",
                                              "要退出程序吗?",
                                              MessageDialogStyle.AffirmativeAndNegative, mySettings);
@@ -110,10 +156,48 @@ namespace DataFusion.ViewModel
         })).Value;
 
 
-        public ObservableCollection<HamburgerMenuItem> MenuItems { get; set; }
+        public ObservableCollection<HamburgerMenuIconItemWrapper> MenuItems
+        {
+            get => _pluginEntryController.MenuItems;
+        }
 
         public ObservableCollection<HamburgerMenuIconItem> OptionsMenuItems { get; set; }
 
 
+
+        private bool _flyoutToastIsOpen;
+        private string _toastText;
+
+        public bool FlyoutToastIsOpen
+        {
+            get => _flyoutToastIsOpen;
+            set
+            {
+                _flyoutToastIsOpen = value;
+                RaisePropertyChanged();
+            }
+        }
+        public string ToastText
+        {
+            get => _toastText;
+            set
+            {
+                _toastText = value;
+                RaisePropertyChanged();
+                FlyoutToastIsOpen = true;
+            }
+        }
+
+        public override void Cleanup()
+        {
+            try
+            {
+                base.Cleanup();
+            }
+            catch (Exception)
+            {
+
+            }
+        }
     }
 }

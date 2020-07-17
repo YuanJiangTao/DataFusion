@@ -4,11 +4,60 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:DataFusion.Views"
-             mc:Ignorable="d" 
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             mc:Ignorable="d"  DataContext="{Binding  PluginManagerViewModel ,Source={StaticResource Locator}}"
              d:DesignHeight="450" d:DesignWidth="800">
-    <!--<hc:TransitioningContentControl>
-        <Grid>
+    <Grid>
+        <DataGrid ItemsSource="{Binding MinePluginConfigInfoViewModels}" CanUserAddRows="False" CanUserDeleteRows="False"  AutoGenerateColumns="False"
+                  SelectionUnit="FullRow" SelectionMode="Single" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding MineName}" IsReadOnly="True" Header="煤矿名称" />
+                <DataGridTextColumn Binding="{Binding MineCode}" IsReadOnly="True" Header="煤矿编号" />
+                <DataGridTextColumn Binding="{Binding PluginTitle}" IsReadOnly="True" Header="插件名称" />
+                <DataGridTextColumn Binding="{Binding PluginVersion}" IsReadOnly="True" Header="插件版本"/>
+                <DataGridTextColumn Binding="{Binding CreateTime,StringFormat='{}{0:yyyy-MM-dd HH:mm:ss}'}" IsReadOnly="True" Header="生成时间" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="是否启用"/>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <controls:ToggleSwitch IsChecked="{Binding IsEnable,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" OnLabel="启用" OffLabel="卸载" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.Header>
+                        <TextBlock Text="是否删除" />
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding DeleteCommand}" ToolTip="删除" Style="{StaticResource MahApps.Styles.Button.MetroAccentSquare}">
+                                <iconPacks:Modern Kind="Delete" Height="20" Width="20"></iconPacks:Modern>
+                            </Button>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            <DataGrid.Style>
+                <Style BasedOn="{StaticResource MahApps.Styles.DataGrid}" TargetType="{x:Type DataGrid}">
+                    <Setter Property="AlternatingRowBackground" Value="{DynamicResource MahApps.Brushes.Gray10}" />
+                </Style>
+            </DataGrid.Style>
+            <DataGrid.RowStyle>
+                <Style BasedOn="{StaticResource MahApps.Styles.DataGridRow}" TargetType="{x:Type DataGridRow}">
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Path=IsMouseOver, RelativeSource={RelativeSource Self}}" Value="true" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Background" Value="#FFBDBD" />
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>
 
-        </Grid>
-    </hc:TransitioningContentControl>-->
+    </Grid>
 </UserControl>

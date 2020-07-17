@@ -7,11 +7,11 @@ using System.Windows;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("DataFusion")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("数据融合")]
+[assembly: AssemblyDescription("融合管网、安全监控系统数据")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Home")]
-[assembly: AssemblyProduct("DataFusion")]
+[assembly: AssemblyCompany("光力科技股份有限公司")]
+[assembly: AssemblyProduct("20200717")]
 [assembly: AssemblyCopyright("Copyright © Home 2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

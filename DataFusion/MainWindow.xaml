@@ -14,7 +14,7 @@
         xmlns:customcontrols="clr-namespace:DataFusion.UserControls"
                  WindowStartupLocation="CenterScreen"
         Title="{Binding SystemTitle}" ShowInTaskbar="True"    
-        GlowBrush="{DynamicResource MahApps.Brushes.Accent}" 
+        GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
         ShowIconOnTitleBar="True"  Icon="icon.ico"
         DataContext="{Binding Main,Source={StaticResource Locator}}"
                  >
@@ -29,11 +29,11 @@
         </Behaviors:EventTrigger>
     </Behaviors:Interaction.Triggers>
     <mah:MetroWindow.Resources>
-        
+
     </mah:MetroWindow.Resources>
     <mah:MetroWindow.RightWindowCommands>
         <mah:WindowCommands  ShowLastSeparator="False">
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Visibility="Collapsed" Orientation="Horizontal">
                 <Expander ExpandDirection="Left" BorderBrush="Transparent" >
                     <StackPanel Orientation="Horizontal">
                     </StackPanel>
@@ -66,14 +66,37 @@
                 </Grid>
             </mah:Flyout>
 
-            <mah:Flyout x:Name="FlyoutPluginSettings" Position="Right" Theme="Adapt"
-                        DataContext="{Binding PluginCatalogEntryVm, Source={StaticResource Locator}}"
+            <mah:Flyout x:Name="FlyoutPluginSettings" Position="Right" Theme="Adapt" Header="插件列表"
+                        DataContext="{Binding PluginCatalogEntryViewModel, Source={StaticResource Locator}}"
                         Width="{Binding RelativeSource={RelativeSource FindAncestor,
                             AncestorType=mah:FlyoutsControl}, Path=ActualWidth,
                             Converter={StaticResource PercentageConverter },
                             ConverterParameter='0.7'}">
+                
                 <customcontrols:PluginEntrySettingControl
                     PluginEntryVms="{Binding PluginEntryVms}"/>
+            </mah:Flyout>
+            <mah:Flyout x:Name="FlyoutToast" Header="Top" Visibility="Collapsed"
+                             Position="Bottom"
+                             Theme="Adapt"
+                             IsModal="False"
+                             Margin="50 0 50 35"
+                             TitleVisibility="Collapsed"
+                             IsAutoCloseEnabled="True"
+                             AutoCloseInterval="5000"
+                            IsOpen="{Binding FlyoutToastIsOpen}"
+                             CloseButtonVisibility="Collapsed">
+                <StackPanel Height="150">
+                    <TextBlock Text="异常信息" FontSize="22"
+                               Margin="5" Background="{DynamicResource MahApps.Brushes.Accent }"/>
+                    <TextBox x:Name="TxbToast" Height="100"
+                             HorizontalAlignment="Stretch"
+                             Margin="5"
+                             VerticalAlignment="Stretch"
+                             TextWrapping="Wrap"
+                             VerticalScrollBarVisibility="Auto"
+                             Text="{Binding ToastText}"></TextBox>
+                </StackPanel>
             </mah:Flyout>
         </mah:FlyoutsControl>
     </mah:MetroWindow.Flyouts>
@@ -100,6 +123,8 @@
                                     Style="{StaticResource HamburgerMenuCreatorsStyle}"
                                     ItemsSource="{Binding MenuItems}"
                                     OptionsItemsSource="{Binding OptionsMenuItems}"
+                                   
+                                    SelectedItem="{Binding SelectedMenuItem}"
                                     VerticalScrollBarOnLeftSide="False">
                     <mah:HamburgerMenu.ContentTemplate>
                         <DataTemplate DataType="{x:Type mah:HamburgerMenuIconItem}">
@@ -118,7 +143,17 @@
                                           Focusable="False"
                                           HorizontalScrollBarVisibility="Disabled"
                                           VerticalScrollBarVisibility="Auto">
-                                    <ContentControl Content="{Binding Tag}" Focusable="False" />
+                                    <Border BorderThickness="2" ClipToBounds="True" CornerRadius="2">
+                                        <ContentControl  Focusable="False"  Content="{Binding Tag}" />
+                                    </Border>
+                                    <!--<Canvas >
+                                        <Canvas x:Name="OuterCanvas">
+                                            <Grid>
+                                                <ContentControl Panel.ZIndex="{Binding Path=(Panel.ZIndex),ElementName=OuterCanvas,ConverterParameter='1',Converter={StaticResource ZIndexConverter}}"   
+                                                                Content="{Binding Tag}" />
+                                            </Grid>
+                                        </Canvas>
+                                    </Canvas>-->
                                 </ScrollViewer>
                             </Grid>
                         </DataTemplate>
@@ -132,6 +167,13 @@
                     </StatusBarItem>
                     <Separator Style="{StaticResource MahApps.Styles.Separator.StatusBar}" />
                 </StackPanel>
+                <StatusBarItem HorizontalAlignment="Right" Padding="0">
+                    <Button x:Name="BtnToast" Margin="5,0" 
+                            Content="信息"   Background="Transparent"
+                            Command="{Binding ToastCommand}">
+                    </Button>
+                </StatusBarItem>
+
             </StatusBar>
         </Grid>
     </Border>

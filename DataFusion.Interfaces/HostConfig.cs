@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace DataFusion.Interfaces
 {
@@ -12,34 +10,37 @@ namespace DataFusion.Interfaces
 
         public MinePluginConfig MinePluginConfig { get; set; }
     }
-
-    public class ProtocalConfig : MarshalByRefObject
+    public class ProtocalEnableConfig : INotifyPropertyChanged
     {
-        public string MineName { get; set; }
+        private string _protocalName;
 
-        public string MineCode { get; set; }
-
-        public DateTime BuildTime { get; set; }
-
-        public PluginType PluginType { get; set; }
-
-        public bool IsEnableSafetyMonitorProtocal { get; set; }
-
-        public bool IsEnableEpipemonitorProtocal { get; set; }
-
-        public bool IsEnableVideoMonitorProtocal { get; set; }
-
-        public override string ToString()
+        public string ProtocalName
         {
-            return $"IsEnableSafetyMonitorProtocal:{IsEnableSafetyMonitorProtocal}\t" +
-                $"IsEnableEpipemonitorProtocal:{IsEnableEpipemonitorProtocal}\t" +
-                $"IsEnableVideoMonitorProtocal:{IsEnableVideoMonitorProtocal}";
+            get => _protocalName;
+            set
+            {
+                if (Equals(_protocalName, value)) return;
+                _protocalName = value;
+                OnPropertyChanged();
+            }
+        }
+        private bool _isEnable;
+
+        public bool IsEnable
+        {
+            get => _isEnable;
+            set
+            {
+                if (Equals(_isEnable, value)) return;
+                _isEnable = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
-    public enum PluginType
-    {
-        FileUc=0x01,
-        ApiUc=0x02
-    }
-
 }

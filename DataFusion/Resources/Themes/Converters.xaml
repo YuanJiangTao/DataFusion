@@ -6,5 +6,6 @@
     <converter:String2BrushConverter x:Key="String2BrushConverter"/>
     <converter:HatchBrushConverter x:Key="HatchBrushConverter"/>
     <converter:PercentageConverter x:Key="PercentageConverter" />
-
+    <converter:ZIndexConverter x:Key="ZIndexConverter" />
+    <converter:ProtocalEnabledStateConverter x:Key="ProtocalEnabledStateConverter" />
 </ResourceDictionary>

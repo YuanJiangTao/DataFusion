@@ -6,39 +6,77 @@
              xmlns:local="clr-namespace:DataFusion.Views"
              mc:Ignorable="d" 
              xmlns:converter="clr-namespace:DataFusion.Resources.Converter"
-             DataContext="{Binding PluginStateDisplayView,Source={StaticResource Locator}}"
+             DataContext="{Binding PluginStateDisplayViewModel,Source={StaticResource Locator}}"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:ProtocalRunStateConverter x:Key="ProtocalRunStateConverter"></converter:ProtocalRunStateConverter>
         <converter:ProtocalEnabledStateConverter x:Key="ProtocalEnabledStateConverter"></converter:ProtocalEnabledStateConverter>
     </UserControl.Resources>
-    <Grid   >
-        <ListView ItemsSource="{Binding MineProtocalConfigInfos }" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock  Grid.Row="0" Margin="10" FontSize="20" Text="暂时没有插件运行" Foreground="Red" >
+            <TextBlock.Style>
+                <Style>
+                    <Style.Triggers>
+                        <DataTrigger Value="True" Binding="{Binding IsEmpty}">
+                            <Setter Property="TextBlock.Visibility" Value="Visible"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Value="False" Binding="{Binding IsEmpty}">
+                            <Setter Property="TextBlock.Visibility" Value="Collapsed"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <ListView Grid.Row="1" ItemsSource="{Binding MineProtocalEnableConfigViewModels}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                     <Setter Property="FontFamily" Value="Segoe UI" />
                     <Setter Property="FontSize" Value="11"/>
                     <Setter Property="Margin" Value="10" />
-                    <Setter Property="HorizontalContentAlignment" Value="Center" />
-                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                    <Setter Property="VerticalContentAlignment" Value="Top" />
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
-                                <Border   CornerRadius="10"  >
+                                <Border  CornerRadius="10"  >
+                                    <Border.ToolTip>
+                                        <Border BorderThickness="1" BorderBrush="{DynamicResource MahApps.Brushes.Accent }">
+                                            <ItemsControl ItemsSource="{Binding ProtocalEnableConfigs}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="Auto" />
+                                                                <ColumnDefinition Width="*"/>
 
-                                    <Grid Width="300" Height="150"  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="0" Margin="10" VerticalAlignment="Center"  FontSize="{DynamicResource MahApps.Font.Size.Default}" 
+                                                                               Text="{Binding ProtocalName,StringFormat={}{0}状态:}" />
+                                                            <TextBlock Grid.Column="1" Margin="10" VerticalAlignment="Center"  FontSize="{DynamicResource MahApps.Font.Size.Default}"
+                                                                               Text="{Binding IsEnable,Converter={StaticResource ProtocalEnabledStateConverter}}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Border>
+                                    </Border.ToolTip>
+                                    <Grid  Width="300" Height="150" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="30"/>
                                             <RowDefinition Height="*"/>
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
-                                        <Border  Grid.Row="0" CornerRadius="10,10,0,0" >
-                                            <TextBlock  FontSize="15" Foreground="White" Text="{Binding MineName}" />
+                                        <Border  Grid.Row="0" CornerRadius="10,10,0,0" Background="{DynamicResource MahApps.Brushes.Accent }" >
+                                            <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="15" Foreground="White" Text="{Binding MineName}" />
                                         </Border>
+                                        <Border  Grid.Row="1"  BorderThickness="2" BorderBrush="{DynamicResource MahApps.Brushes.Accent }">
 
-                                        <Grid Grid.Row="1">
                                             <Canvas>
                                                 <Image x:Name="image"  Canvas.Top="30" Canvas.Left="0" Source="../Resources/Img/express.png" Width="40" Height="40">
                                                     <Image.RenderTransform>
@@ -50,17 +88,12 @@
                                                     <Image.Style>
                                                         <Style>
                                                             <Style.Triggers>
-                                                                <DataTrigger Value="True">
-                                                                    <DataTrigger.Binding>
-                                                                        <MultiBinding Converter="{StaticResource ProtocalEnabledStateConverter}" >
-                                                                            <Binding Path="IsEnableSafetyMonitorProtocal" />
-                                                                            <Binding Path="IsEnableEpipemonitorProtocal"/>
-                                                                            <Binding Path="IsEnableVideoMonitorProtocal"/>
-                                                                        </MultiBinding>
-                                                                    </DataTrigger.Binding>
-                                                                    <Setter Property="Image.Visibility" Value="Hidden"></Setter>
+                                                                <DataTrigger Value="True" Binding="{Binding IsRunning}">
+                                                                    <Setter Property="Image.Visibility" Value="Visible"></Setter>
                                                                 </DataTrigger>
-
+                                                                <DataTrigger Value="False" Binding="{Binding IsRunning}">
+                                                                    <Setter Property="Image.Visibility" Value="Collapsed"></Setter>
+                                                                </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Image.Style>
@@ -89,6 +122,60 @@
                                                         </EventTrigger>
                                                     </Image.Triggers>
                                                 </Image>
+                                                <Image x:Name="BreakDownImage" Canvas.Left="130" Canvas.Top="40" Width="40" Height="40" Source="../Resources/Img/breakdown.png">
+
+                                                    <Image.Style>
+                                                        <Style>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Value="True" Binding="{Binding IsRunning}">
+                                                                    <Setter Property="Image.Visibility" Value="Collapsed"></Setter>
+                                                                </DataTrigger>
+                                                                <DataTrigger Value="False" Binding="{Binding IsRunning}">
+                                                                    <Setter Property="Image.Visibility" Value="Visible"></Setter>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Image.Style>
+                                                </Image>
+                                            </Canvas>
+                                        </Border>
+
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <!--<ListView ItemsSource="{Binding MineProtocalConfigInfos }" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                    <Setter Property="FontFamily" Value="Segoe UI" />
+                    <Setter Property="FontSize" Value="11"/>
+                    <Setter Property="Margin" Value="10" />
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <Border   CornerRadius="10"  >
+
+                                    <Grid Width="300" Height="150"  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Border  Grid.Row="0" CornerRadius="10,10,0,0" >
+                                            <TextBlock  FontSize="15" Foreground="White" Text="{Binding MineName}" />
+                                        </Border>
+
+                                        <Grid Grid.Row="1">
+                                            <Canvas>
+                                             
                                                 <Image x:Name="BreakDownImage" Canvas.Left="60" Visibility="Hidden"  Canvas.Top="15" Width="90" Height="90" Source="../Resources/Img/breakdown.png">
                                                     <Image.Style>
                                                         <Style>
@@ -119,7 +206,9 @@
                                                 </Image>
                                             </Canvas>
                                         </Grid>
-                                        <!--<hc:LoadingLine Grid.Row="2"/>-->
+                                        -->
+        <!--<hc:LoadingLine Grid.Row="2"/>-->
+        <!--
                                     </Grid>
                                     <Border.ToolTip>
                                         <ToolTip>
@@ -214,6 +303,6 @@
                     <WrapPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ListView.ItemsPanel>
-        </ListView>
+        </ListView>-->
     </Grid>
 </UserControl>

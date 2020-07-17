@@ -38,7 +38,7 @@ namespace DataFusion
 
         private void BtnPluginEntrySettings_Click(object sender, RoutedEventArgs e)
         {
-
+            this.FlyoutPluginSettings.IsOpen = !this.FlyoutPluginSettings.IsOpen;
         }
     }
 }

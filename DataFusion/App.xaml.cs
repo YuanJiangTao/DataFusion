@@ -34,6 +34,7 @@ namespace DataFusion
         private static Mutex AppMutex;
         public App()
         {
+            
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
@@ -51,7 +52,7 @@ namespace DataFusion
             return null;
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             AppMutex = new Mutex(true, Constant.ClietnName, out var createdNew);
             if (!createdNew)
@@ -76,17 +77,19 @@ namespace DataFusion
                 ShutdownMode = ShutdownMode.OnMainWindowClose;
                 _splashView = container.Resolve<SplashView>();
                 _splashView.Show();
+                await _splashView.ShowMessage("正在初始化容器");
                 locator.IniContainer(container);
+                await container.Resolve<PluginEntryController>().IniMinePlugins();
                 base.OnStartup(e);
             }
         }
 
         private async void Application_Startup(object sender, StartupEventArgs e)
         {
+            await _splashView.ShowMessage("正在初始插件");
             _mainWindow = container.Resolve<MainWindow>();
             _mainWindow.InitializeComponent();
             _log.Info($"Hello {Constant.ClietnName}.");
-            await Task.Delay(500);
             Current.MainWindow = _mainWindow;
             _mainWindow.Show();
             _splashView.Close();

@@ -386,6 +386,21 @@ namespace DataFusion.Interfaces.Utils
                 return db.HashGetAll(key).ToList();
             });
         }
+        /// <summary>
+        /// 获取hash中所有的value值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public IEnumerable<T> HashGetAll<T>(string key)
+        {
+            key = AddSysCustomKey(key);
+            return Do(db =>
+            {
+                var redisValues = db.HashGetAll(key).Select(p => p.Value);
+                return ConvertList<T>(redisValues.ToArray());
+            });
+        }
 
         /// <summary>
         /// 存储数据到hash表

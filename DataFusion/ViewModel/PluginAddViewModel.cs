@@ -1,38 +1,49 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media.Animation;
 using DataFusion.Interfaces;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 
 namespace DataFusion.ViewModel
 {
-    [MetadataType(typeof(PluginAddViewModel))]
     public class PluginAddViewModel : ViewModelBase, IDataErrorInfo
     {
 
-        public PluginAddViewModel(Action<object> closeHandler)
+        public PluginAddViewModel(Action<PluginAddViewModel> closeHandler)
         {
-            CloseCommand = new RelayCommand(() =>
-            {
-                DialogResult = true;
-                closeHandler(this);
-            }, CanSave);
+            CloseCommand = new SimpleCommand(CanSaveItem, o =>
+              {
+                  DialogResult = true;
+                  closeHandler(this);
+              });
+            CancelCommand = new SimpleCommand(o => true, o =>
+              {
+                  DialogResult = false;
+                  closeHandler(this);
+              });
+            //CloseCommand = new RelayCommand(() =>
+            //{
+            //    DialogResult = true;
+            //    closeHandler(this);
+            //}, CanSaveItem, true);
 
-            CancelCommand = new RelayCommand(() =>
-            {
-                DialogResult = false;
-                closeHandler(this);
-            });
+            //CancelCommand = new RelayCommand(() =>
+            //{
+            //    DialogResult = false;
+            //    closeHandler(this);
+            //}, true);
         }
 
-        private string _mineName { get; set; }
-        [Required(ErrorMessage = "煤矿名称不能为空")]
+        private string _mineName = "默认名称";
         public string MineName
         {
             get => _mineName;
@@ -42,8 +53,7 @@ namespace DataFusion.ViewModel
                 RaisePropertyChanged();
             }
         }
-        private string _mineCode;
-        [Required(ErrorMessage = "煤矿编号不能为空")]
+        private string _mineCode = "0123456789";
         public string MineCode
         {
             get => _mineCode;
@@ -54,60 +64,103 @@ namespace DataFusion.ViewModel
             }
         }
 
-        private bool CanSave()
+        private bool CanSaveItem()
         {
-            return dataErrors.Count != 0;
+            return _propertyErrorMessage.Values.All(p => string.IsNullOrEmpty(p));
+        }
+        private bool CanSaveItem(object obj)
+        {
+            return _propertyErrorMessage.Values.All(p => string.IsNullOrEmpty(p));
         }
 
         public ICommand CloseCommand { get; set; }
         public ICommand CancelCommand { get; set; }
         public bool DialogResult { get; set; } = false;
 
-        #region --验证
-        public string this[string columnName]
+
+        private Dictionary<string, string> _propertyErrorMessage = new Dictionary<string, string>();
+
+        public string this[string propertyName]
         {
             get
-            {
-                ValidationContext context = new ValidationContext(this, null, null);
-                context.MemberName = columnName;
-                var res = new List<ValidationResult>();
-                var result = Validator.TryValidateProperty(this.GetType().GetProperty(columnName).GetValue(this, null), context, res);
-                if (res.Count > 0)
+           {
+                string validationMessage = string.Empty;
+                switch (propertyName)
                 {
-                    AddDic(dataErrors, context.MemberName);
-                    return string.Join(Environment.NewLine, res.Select(r => r.ErrorMessage).ToArray());
+                    case "MineCode":
+                        {
+                            if (string.IsNullOrEmpty(MineCode))
+                            {
+                                validationMessage = "煤矿编号不能为空.";
+                            }
+                        }
+                        break;
+                    case "MineName":
+                        {
+                            if (string.IsNullOrEmpty(MineName))
+                            {
+                                validationMessage = "煤矿名称不能为空.";
+                            }
+                        }
+                        break;
                 }
-                RemoveDic(dataErrors, context.MemberName);
-                return null;
+                if (_propertyErrorMessage.ContainsKey(propertyName))
+                {
+                    _propertyErrorMessage[propertyName] = validationMessage;
+                }
+                else
+                {
+                    _propertyErrorMessage.Add(propertyName, validationMessage);
+                }
+                CommandManager.InvalidateRequerySuggested();
+                Error = validationMessage;
+                return validationMessage;
             }
 
         }
         private Dictionary<string, string> dataErrors = new Dictionary<string, string>();
-        public string Error => null;
-
-        #region 附属方法
-
-        /// <summary>
-        /// 移除字典
-        /// </summary>
-        /// <param name="dics"></param>
-        /// <param name="dicKey"></param>
-        private void RemoveDic(Dictionary<String, String> dics, String dicKey)
+        private string _error;
+        public string Error
         {
-            dics.Remove(dicKey);
+            get { return _error; }
+            set
+            {
+                //((RelayCommand)CloseCommand).RaiseCanExecuteChanged();
+                if (value == _error) return;
+                _error = value;
+                RaisePropertyChanged();
+            }
         }
 
-        /// <summary>
-        /// 添加字典
-        /// </summary>
-        /// <param name="dics"></param>
-        /// <param name="dicKey"></param>
-        private void AddDic(Dictionary<String, String> dics, String dicKey)
-        {
-            if (!dics.ContainsKey(dicKey)) dics.Add(dicKey, "");
-        }
-        #endregion
+    }
 
-        #endregion 
+    public class SimpleCommand : ICommand
+    {
+        public SimpleCommand(Func<object, bool> canExecute = null, Action<object> execute = null)
+        {
+            this.CanExecuteDelegate = canExecute;
+            this.ExecuteDelegate = execute;
+        }
+
+        public Func<object, bool> CanExecuteDelegate { get; set; }
+
+        public Action<object> ExecuteDelegate { get; set; }
+
+        public bool CanExecute(object parameter)
+        {
+            var canExecute = this.CanExecuteDelegate;
+            return canExecute == null || canExecute(parameter);
+        }
+
+        public event EventHandler CanExecuteChanged
+        {
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
+        }
+
+        public void Execute(object parameter)
+        {
+            this.ExecuteDelegate?.Invoke(parameter);
+        }
     }
 }

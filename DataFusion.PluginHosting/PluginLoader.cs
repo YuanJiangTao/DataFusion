@@ -64,7 +64,18 @@ namespace DataFusion.PluginHosting
         }
         public void Dispose()
         {
+            Console.WriteLine("Shutdown requested");
 
+            if (_dispatcher != null)
+            {
+                Console.WriteLine("Performing dispatcher shutdown");
+                _dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
+            }
+            else
+            {
+                Console.WriteLine("No dispatcher, exiting the process");
+                Environment.Exit(1);
+            }
         }
 
         public void Hello()
@@ -82,21 +93,28 @@ namespace DataFusion.PluginHosting
             {
                 throw new TargetInvocationException((Exception)result);
             }
+            //return (IRemotePlugin)((Task<object>)result).Result;
             return (IRemotePlugin)result;
 
         }
-        private object LoadPluginOnUiThread(PluginStartupInfo startupInfo)
+        private  object LoadPluginOnUiThread(PluginStartupInfo startupInfo)
         {
             var ipluginType = typeof(IPlugin);
             try
             {
                 var obj = PluginCreator.CreatePlugin(startupInfo.AssemblyName, ipluginType, _host);
                 var localPlugin = obj as IPlugin;
-                if(localPlugin==null)
+                if (localPlugin == null)
                 {
-                    var message = string.Format("Object of type {0} cannot be loaded as plugin " +"because it does not implement IPlugin interface", ipluginType.Name);
+                    var message = string.Format("Object of type {0} cannot be loaded as plugin " + "because it does not implement IPlugin interface", ipluginType.Name);
                     throw new InvalidOperationException(message);
                 }
+
+                localPlugin.Load();
+                //await Task.Factory.StartNew(() =>
+                //{
+                //    localPlugin.Load();
+                //});
                 var remotePlugin = new RemotePlugin(localPlugin);
                 return remotePlugin;
             }

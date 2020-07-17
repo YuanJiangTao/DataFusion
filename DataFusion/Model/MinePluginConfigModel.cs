@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DataFusion.Model
 {
-   public class MinePluginConfigModel
+    public class MinePluginConfigModel
     {
         public MinePluginConfigModel()
         {
@@ -30,7 +30,18 @@ namespace DataFusion.Model
         /// </summary>
         public bool IsEnable { get; set; } = true;
 
-        public PluginEntrySg PluginEntrySg { get; set; }
+        public string Title { get; set; }
+
+        public string Version { get; set; }
+
+        public bool IsDebug { get; set; }
+
+        public int Bits { get; set; }
+
+        public override string ToString()
+        {
+            return $"插件[{Id}:{MineName}-{MineCode}]";
+        }
 
         public MinePluginConfig ToMinePluginConfig()
         {

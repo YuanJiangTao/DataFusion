@@ -20,7 +20,6 @@ namespace DataFusion.PluginHosting
             var localContract = FrameworkElementAdapters.ViewToContractAdapter(control);
             Contract = new NativeHandleContractInsulator(localContract);
         }
-
         public INativeHandleContract Contract { get; private set; }
 
         public void Dispose()
