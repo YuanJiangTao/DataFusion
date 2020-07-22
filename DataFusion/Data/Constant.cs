@@ -12,7 +12,7 @@ namespace DataFusion.Data
 
         public const string ClientConfig = "client.config";
 
-        public const string ClietnName = "DataFusion";
+        public const string ClietnName = "系统融合";
 
         public const string PluginsFolder = "Plugins";
 

@@ -159,8 +159,8 @@ namespace DataFusion.ViewModel
                 {
                     var minePluginConfigViewModel = new MinePluginConfigInfoViewModel(mineProtocalConfigInfo);
                     MinePluginConfigInfoViewModels.Add(minePluginConfigViewModel);
-                    _service.HandleMinePluginConfigModel(mineProtocalConfigInfo);
                 }
+                _service.HandleMinePluginConfigModel(mineProtocalConfigInfo);
             }
             Messenger.Default.Send<string>("", MessageToken.ProtocalStateChanged);
         }

@@ -31,7 +31,13 @@
                 </Style>
             </TextBlock.Style>
         </TextBlock>
-        <ListView Grid.Row="1" ItemsSource="{Binding MineProtocalEnableConfigViewModels}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+        <ListView Grid.Row="1" ItemsSource="{Binding MineProtocalEnableConfigViewModels}"  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal">
+                    </WrapPanel>
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="FocusVisualStyle" Value="{x:Null}" />
@@ -44,7 +50,7 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
                                 <Border  CornerRadius="10"  >
-                                    <Border.ToolTip>
+                                    <!--<Border.ToolTip>
                                         <Border BorderThickness="1" BorderBrush="{DynamicResource MahApps.Brushes.Accent }">
                                             <ItemsControl ItemsSource="{Binding ProtocalEnableConfigs}">
                                                 <ItemsControl.ItemTemplate>
@@ -64,7 +70,7 @@
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
                                         </Border>
-                                    </Border.ToolTip>
+                                    </Border.ToolTip>-->
                                     <Grid  Width="300" Height="150" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                       SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
                                         <Grid.RowDefinitions>
@@ -145,164 +151,31 @@
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
-                </Style>
-            </ListView.ItemContainerStyle>
-        </ListView>
-        <!--<ListView ItemsSource="{Binding MineProtocalConfigInfos }" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                    <Setter Property="FontFamily" Value="Segoe UI" />
-                    <Setter Property="FontSize" Value="11"/>
-                    <Setter Property="Margin" Value="10" />
-                    <Setter Property="HorizontalContentAlignment" Value="Center" />
-                    <Setter Property="VerticalContentAlignment" Value="Center" />
-                    <Setter Property="Template">
+                    <Setter Property="ListViewItem.ToolTip">
                         <Setter.Value>
-                            <ControlTemplate TargetType="ListViewItem">
-                                <Border   CornerRadius="10"  >
+                            <Border BorderThickness="1" BorderBrush="{DynamicResource MahApps.Brushes.Accent }">
+                                <ItemsControl ItemsSource="{Binding ProtocalEnableConfigs}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*"/>
 
-                                    <Grid Width="300" Height="150"  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="30"/>
-                                            <RowDefinition Height="*"/>
-                                            <RowDefinition Height="Auto"/>
-                                        </Grid.RowDefinitions>
-                                        <Border  Grid.Row="0" CornerRadius="10,10,0,0" >
-                                            <TextBlock  FontSize="15" Foreground="White" Text="{Binding MineName}" />
-                                        </Border>
-
-                                        <Grid Grid.Row="1">
-                                            <Canvas>
-                                             
-                                                <Image x:Name="BreakDownImage" Canvas.Left="60" Visibility="Hidden"  Canvas.Top="15" Width="90" Height="90" Source="../Resources/Img/breakdown.png">
-                                                    <Image.Style>
-                                                        <Style>
-                                                            <Style.Triggers>
-                                                                <DataTrigger Value="True">
-                                                                    <DataTrigger.Binding>
-                                                                        <MultiBinding Converter="{StaticResource ProtocalEnabledStateConverter}" >
-                                                                            <Binding Path="IsEnableSafetyMonitorProtocal" />
-                                                                            <Binding Path="IsEnableEpipemonitorProtocal"/>
-                                                                            <Binding Path="IsEnableVideoMonitorProtocal"/>
-                                                                        </MultiBinding>
-                                                                    </DataTrigger.Binding>
-                                                                    <Setter Property="Image.Visibility" Value="Visible"></Setter>
-                                                                </DataTrigger>
-                                                                <DataTrigger Value="False">
-                                                                    <DataTrigger.Binding>
-                                                                        <MultiBinding Converter="{StaticResource ProtocalEnabledStateConverter}" >
-                                                                            <Binding Path="IsEnableSafetyMonitorProtocal" />
-                                                                            <Binding Path="IsEnableEpipemonitorProtocal"/>
-                                                                            <Binding Path="IsEnableVideoMonitorProtocal"/>
-                                                                        </MultiBinding>
-                                                                    </DataTrigger.Binding>
-                                                                    <Setter Property="Image.Visibility" Value="Hidden" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </Image.Style>
-                                                </Image>
-                                            </Canvas>
-                                        </Grid>
-                                        -->
-        <!--<hc:LoadingLine Grid.Row="2"/>-->
-        <!--
-                                    </Grid>
-                                    <Border.ToolTip>
-                                        <ToolTip>
-                                            <ToolTip.Style>
-                                                <Style TargetType="ToolTip">
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate>
-                                                                <Border   CornerRadius="10">
-                                                                    <StackPanel>
-                                                                        <Grid>
-                                                                            <Grid.Style>
-                                                                                <Style>
-                                                                                    <Style.Triggers>
-                                                                                        <DataTrigger Binding="{Binding IsEnableSafetyMonitorProtocal}" Value="False">
-                                                                                            <Setter Property="Grid.Visibility" Value="Collapsed"></Setter>
-                                                                                        </DataTrigger>
-                                                                                    </Style.Triggers>
-                                                                                </Style>
-                                                                            </Grid.Style>
-                                                                            <Grid.RowDefinitions>
-                                                                                <RowDefinition/>
-                                                                            </Grid.RowDefinitions>
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition/>
-                                                                                <ColumnDefinition/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Label Grid.Row="0" Grid.Column="0"  Content="安全监控系统运行状态:"/>
-                                                                            <Label Grid.Row="0"  Grid.Column="1" Content="{Binding SafetyMonitorRunState,Converter={StaticResource ProtocalRunStateConverter} }">
-
-                                                                            </Label>
-                                                                        </Grid>
-                                                                        <Grid>
-                                                                            <Grid.Style>
-                                                                                <Style>
-                                                                                    <Style.Triggers>
-                                                                                        <DataTrigger Binding="{Binding IsEnableEpipemonitorProtocal}" Value="False">
-                                                                                            <Setter Property="Grid.Visibility" Value="Collapsed"></Setter>
-                                                                                        </DataTrigger>
-                                                                                    </Style.Triggers>
-                                                                                </Style>
-                                                                            </Grid.Style>
-                                                                            <Grid.RowDefinitions>
-                                                                                <RowDefinition/>
-                                                                            </Grid.RowDefinitions>
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition/>
-                                                                                <ColumnDefinition/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Label Grid.Row="0" Grid.Column="0"  Content="瓦斯抽采系统运行状态:"/>
-                                                                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding EpipemonitorRunState,Converter={StaticResource ProtocalRunStateConverter} }"/>
-                                                                        </Grid>
-                                                                        <Grid>
-                                                                            <Grid.Style>
-                                                                                <Style>
-                                                                                    <Style.Triggers>
-                                                                                        <DataTrigger Binding="{Binding IsEnableVideoMonitorProtocal}" Value="False">
-                                                                                            <Setter Property="Grid.Visibility" Value="Collapsed"></Setter>
-                                                                                        </DataTrigger>
-                                                                                    </Style.Triggers>
-                                                                                </Style>
-                                                                            </Grid.Style>
-                                                                            <Grid.RowDefinitions>
-                                                                                <RowDefinition/>
-                                                                            </Grid.RowDefinitions>
-                                                                            <Grid.ColumnDefinitions>
-                                                                                <ColumnDefinition/>
-                                                                                <ColumnDefinition/>
-                                                                            </Grid.ColumnDefinitions>
-                                                                            <Label Grid.Row="0" Grid.Column="0" Content="视频监控系统运行状态:"/>
-                                                                            <Label Grid.Row="0" Grid.Column="1" Content="{Binding VideoMonitorRunState,Converter={StaticResource ProtocalRunStateConverter} }"/>
-                                                                        </Grid>
-                                                                    </StackPanel>
-                                                                </Border>
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Style>
-                                            </ToolTip.Style>
-                                        </ToolTip>
-                                    </Border.ToolTip>
-                                </Border>
-
-                            </ControlTemplate>
-
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Margin="10" VerticalAlignment="Center"  FontSize="{DynamicResource MahApps.Font.Size.Default}" 
+                                                                               Text="{Binding ProtocalName,StringFormat={}{0}状态:}" />
+                                                <TextBlock Grid.Column="1" Margin="10" VerticalAlignment="Center"  FontSize="{DynamicResource MahApps.Font.Size.Default}"
+                                                                               Text="{Binding IsEnable,Converter={StaticResource ProtocalEnabledStateConverter}}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Border>
                         </Setter.Value>
                     </Setter>
                 </Style>
             </ListView.ItemContainerStyle>
-            <ListView.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ListView.ItemsPanel>
-        </ListView>-->
+        </ListView>
     </Grid>
 </UserControl>
